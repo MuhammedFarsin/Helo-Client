@@ -5,8 +5,9 @@ import SignUp from "./Components/User/SignUp";
 import OtpPage from "./Components/User/OtpPage";
 import EmailResetPassword from "./Components/User/EmailResetPassword";
 import ResetPassword from "./Components/User/ResetPassword";
+import Home from "./Components/User/Home";
 import ProtectedAuth from "./Routes/ProtectedAuth";
-import ProtectedRoute from "./Routes/ProtectedRoute";
+// import ProtectedRoute from "./Routes/ProtectedRoute";
 
 function App() {
   return (
@@ -15,9 +16,9 @@ function App() {
         <Route
           path="/"
           element={
-            <ProtectedAuth>
+            // <ProtectedAuth>
               <Signin />
-            </ProtectedAuth>
+            // </ProtectedAuth>
           }
         />
         <Route
@@ -63,9 +64,9 @@ function App() {
         <Route
           path="/home"
           element={
-            <ProtectedRoute>
-              {/* <Home /> */}
-            </ProtectedRoute>
+            // <ProtectedRoute>
+              <Home />
+            // {/* </ProtectedRoute> */}
           }
         />
       </Routes>

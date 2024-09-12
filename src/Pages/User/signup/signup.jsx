@@ -57,6 +57,7 @@ function SignUpPage() {
         {/* Google Sign Up Button */}
         <button className="social-login google">
           <FcGoogle size={20} />
+          Log in with Google
         </button>
 
         <div className="divider">
