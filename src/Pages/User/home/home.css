@@ -1,14 +1,14 @@
-/* Basic Reset */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
   
-  body {
+  body { 
     font-family: Arial, sans-serif;
     background-color: #fafafa;
-    height: 100vh; /* Ensure the body takes full viewport height */
+    height: 100vh; 
     margin: 0;
   }
   
@@ -109,7 +109,7 @@
   }
   
   /* Background Image Fix */
-  body {
+  .home-body {
     background: #fff; /* Remove any background image and set solid color */
   }
   

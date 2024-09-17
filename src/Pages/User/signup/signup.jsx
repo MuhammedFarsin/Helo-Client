@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../Axios/axios";
-import "./signup.css";
+import "./signup.css"; // Make sure this path is correct or update it as needed
 
 function SignUpPage() {
   // Declare state for form data
@@ -14,7 +14,6 @@ function SignUpPage() {
     password: "",
   });
 
-  // Declare state for success and error messages
   const navigate = useNavigate();
 
   // Handle form input changes
@@ -44,10 +43,10 @@ function SignUpPage() {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <div className="logo">
-          <img src="/src/assets/imageProject/logo.jpg" alt="Logo" />
+    <div className="signup-container">
+      <div className="signup-box">
+        <div className="signup-logo">
+          <img src="/src/assets/imageProject/logo.jpg" alt="Logo" className="signup-logo-image" />
         </div>
         <h2>Sign Up</h2>
         <p>
@@ -55,18 +54,17 @@ function SignUpPage() {
         </p>
 
         {/* Google Sign Up Button */}
-        <button className="social-login google">
+        <button className="signup-social-login google">
           <FcGoogle size={20} />
-          Log in with Google
+          Sign up with Google
         </button>
 
-        <div className="divider">
+        <div className="signup-divider">
           <span>OR</span>
         </div>
 
-
-        <form style={{marginTop: '0.5rem'}} onSubmit={handleSubmit}>
-          <div className="input-group">
+        <form className="signup-form" onSubmit={handleSubmit}>
+          <div className="signup-input-group">
             <input
               type="text"
               placeholder="Username"
@@ -74,9 +72,10 @@ function SignUpPage() {
               name="username"
               value={formData.username}
               onChange={handleInputChange}
+              className="signup-input"
             />
           </div>
-          <div className="input-group">
+          <div className="signup-input-group">
             <input
               type="email"
               placeholder="Email"
@@ -84,9 +83,10 @@ function SignUpPage() {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
+              className="signup-input"
             />
           </div>
-          <div className="input-group">
+          <div className="signup-input-group">
             <input
               type="tel"
               placeholder="Mobile number"
@@ -94,9 +94,10 @@ function SignUpPage() {
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
+              className="signup-input"
             />
           </div>
-          <div className="input-group">
+          <div className="signup-input-group">
             <input
               type="password"
               placeholder="Password"
@@ -104,12 +105,12 @@ function SignUpPage() {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
+              className="signup-input"
             />
-            <span className="toggle-password">Hide</span>
+            <span className="signup-toggle-password">Hide</span>
           </div>
-          <button className="login-button">Create an account</button>
+          <button type="submit" className="signup-button">Create an account</button>
         </form>
-
       </div>
     </div>
   );

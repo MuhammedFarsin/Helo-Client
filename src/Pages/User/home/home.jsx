@@ -3,6 +3,8 @@ import './home.css'; // Link to your CSS file for styling
 
 function Home() {
   return (
+    <div className='home-body'>
+
     <div className="home-container">
       {/* Sidebar */}
       <div className="sidebar">
@@ -18,6 +20,7 @@ function Home() {
       <div className="suggestions">
         <Suggestions />
       </div>
+    </div>
     </div>
   );
 }

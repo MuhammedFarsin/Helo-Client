@@ -1,4 +1,4 @@
-/* signinpage.css */
+/* signup.css */
 
 body {
     margin: 0;
@@ -12,18 +12,18 @@ body {
     background-image: url('../../../assets/imageProject/vecteezy_abstract-orange-wavy-background-orange-background-with_35768911.jpg'); /* Ensure the correct path */
     background-size: cover;
     background-position: center;
-}
-
-.login-container {
+  }
+  
+  .signup-container {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     padding: 20px;
     box-sizing: border-box; /* Ensure padding is included within the width */
-}
-
-.login-box {
+  }
+  
+  .signup-box {
     height: 430px;
     background-color: #fff;
     padding: 50px;
@@ -32,31 +32,31 @@ body {
     max-width: 90%; /* Allow it to expand up to 90% of the container width */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     text-align: center;
-}
-
-.logo img {
+  }
+  
+  .signup-logo img {
     width: 50px;
     margin-top: -21px;
     border-radius: 30%;
-}
-
-h2 {
+  }
+  
+  h2 {
     margin: 0 0 10px;
     font-size: 24px;
     color: #333;
-}
-
-p {
+  }
+  
+  p {
     margin: 0 0 20px;
     color: #888;
-}
-
-p a {
+  }
+  
+  p a {
     color: #FF5722;
     text-decoration: none;
-}
-
-.google {
+  }
+  
+  .signup-social-login {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -69,58 +69,56 @@ p a {
     background-color: #fff;
     color: #333;
     height: 37px;
-}
-
-.google img {
-    width: 30px;
-    margin-right: 10px;
-}
-
-.google:hover {
+  }
+  
+  .signup-social-login:hover {
     background-color: #f5f5f5;
-}
-
-.divider {
+  }
+  
+  .signup-divider {
     display: flex;
     align-items: center;
     text-align: center;
     color: #333;
-}
-
-.divider::before,
-.divider::after {
+  }
+  
+  .signup-divider::before,
+  .signup-divider::after {
     content: '';
     flex: 1;
     height: 1px;
     background-color: #ddd;
-    
-}
-
-.divider::before {
+  }
+  
+  .signup-divider::before {
     margin-right: 10px;
-}
-
-.divider::after {
+  }
+  
+  .signup-divider::after {
     margin-left: 10px;
-}
-
-.input-group {
+  }
+  
+  .signup-form {
+    margin-top: 0.5rem;
+  }
+  
+  .signup-input-group {
     margin-bottom: 15px;
     text-align: left;
-}
-
-input {
+  }
+  
+  .signup-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 10px; /* Make the input fields more rounded */
     box-sizing: border-box; /* Ensure padding is included within the width */
     font-size: 14px; /* Slightly increase the font size */
-    color: #333 ;
+    color: #333;
     background-color: #fff;
-}
-
-.toggle-password {
+  }
+  
+  .signup-toggle-password {
     font-size: 12px;
     color: #888;
     cursor: pointer;
@@ -129,24 +127,13 @@ input {
     margin-right: 10px;
     display: flex;
     align-items: center;
-}
-
-.toggle-password svg {
+  }
+  
+  .signup-toggle-password svg {
     margin-left: 5px;
-}
-
-.forgot-password {
-    margin-bottom: 20px;
-    text-align: right;
-}
-
-.forgot-password a {
-    color: #FF5722;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.login-button {
+  }
+  
+  .signup-button {
     width: 100%;
     padding: 15px; /* Increase padding for a bigger button */
     background-color: #FF5722;
@@ -156,8 +143,9 @@ input {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease; /* Add a smooth transition for the hover effect */
-}
-
-.login-button:hover {
+  }
+  
+  .signup-button:hover {
     background-color: #E64A19;
-}
+  }
+  

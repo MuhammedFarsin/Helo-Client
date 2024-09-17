@@ -29,7 +29,7 @@ function OtpPage() {
         try {
             const response = await axiosInstance.post("/verify-otp", { otp });
             if (response.data.success) {
-                navigate("/home"); // Navigate to the home page on success
+                navigate("/"); // Navigate to the home page on success
             } else {
                 setError("Invalid OTP. Please try again.");
             }
