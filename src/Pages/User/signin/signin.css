@@ -118,7 +118,7 @@ p a {
     border: 1px solid #ddd;
     border-radius: 10px; /* Make the input fields more rounded */
     box-sizing: border-box; /* Ensure padding is included within the width */
-    font-size: 14px; /* Slightly increase the font size */
+    font-size: 14px;
     color: #333;
     background-color: #fff;
     margin-top:1.2rem ;
