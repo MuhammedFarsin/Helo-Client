@@ -20,13 +20,13 @@ body {
     align-items: center;
     width: 100%;
     padding: 20px;
-    box-sizing: border-box; /* Ensure padding is included within the width */
+    box-sizing: border-box;  /* Ensure padding is included within the width */
 }
 
 .login-box {
+    height: 430px;
     background-color: #fff;
-    height: 400px;
-    padding: 20px;
+    padding: 50px;
     border-radius: 10px;
     width: 300px; /* Make the box smaller */
     max-width: 90%; /* Allow it to expand up to 90% of the container width */
@@ -58,7 +58,9 @@ p a {
 
 .google {
     width: 100%;
+    padding: 10px;
     margin-bottom: 10px;
+    border: 1px solid #ccc;
     border-radius: 30px;
     display: flex;
     align-items: center;
@@ -82,6 +84,8 @@ p a {
     display: flex;
     align-items: center;
     text-align: center;
+    color: #333;
+    margin-top:1.5rem ;
 }
 
 .divider::before,
@@ -99,21 +103,25 @@ p a {
 .divider::after {
     margin-left: 10px;
 }
-
+.login-form {
+    margin-top: 1.5rem;
+}
 .input-group {
     margin-bottom: 15px;
     text-align: left;
+    margin-top:0.5rem ;
 }
 
-input {
+.login-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 10px; /* Make the input fields more rounded */
     box-sizing: border-box; /* Ensure padding is included within the width */
     font-size: 14px; /* Slightly increase the font size */
-    color: #333 ;
+    color: #333;
     background-color: #fff;
+    margin-top:1.2rem ;
 }
 
 .toggle-password {

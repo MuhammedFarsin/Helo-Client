@@ -1,3 +1,4 @@
+import React from "react"
 import SignUpPage from "../../Pages/User/signup/signup"
 
 function SignUp(){
@@ -5,4 +6,4 @@ function SignUp(){
         <SignUpPage/>
     )
 }
-export default SignUp
+export default React.memo(SignUp)

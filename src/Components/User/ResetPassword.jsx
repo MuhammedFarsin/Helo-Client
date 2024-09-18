@@ -1,3 +1,4 @@
+import React from "react"
 import Reset_password from "../../Pages/User/resetpassword/reset-Password"
 function ResetNewPassword() {
   return (
@@ -7,4 +8,4 @@ function ResetNewPassword() {
   )
 }
 
-export default ResetNewPassword
+export default React.memo(ResetNewPassword)

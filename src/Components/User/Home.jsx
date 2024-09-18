@@ -1,3 +1,4 @@
+import React from "react"
 import Home_page from "../../Pages/User/home/home"
 
 function Home() {
@@ -6,4 +7,4 @@ function Home() {
   )
 }
 
-export default Home
+export default React.memo(Home)

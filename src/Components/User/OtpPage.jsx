@@ -1,3 +1,4 @@
+import React from "react";
 import Otp_page from "../../Pages/User/otp/otp";
 
 function OtpPage(){
@@ -5,4 +6,4 @@ function OtpPage(){
         <Otp_page/>
     )
 }
-export default OtpPage
+export default React.memo(OtpPage)

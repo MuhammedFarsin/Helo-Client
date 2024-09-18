@@ -60,9 +60,8 @@ function SigninPage() {
 
         {error && <p className="error">{error}</p>}
 
-        <form onSubmit={handleSubmit}>
+        <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Your email</label>
             <input
               type="text"
               id="username"
@@ -70,10 +69,10 @@ function SigninPage() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Your Username"
               required
+              className="login-input"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">Your password</label>
             <input
               type="password"
               id="password"
@@ -81,6 +80,7 @@ function SigninPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Your password"
               required
+              className="login-input"
             />
           </div>
           <div className="forgot-password">
