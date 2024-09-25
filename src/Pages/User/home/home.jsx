@@ -15,7 +15,7 @@ import "./home.css";
 
 function Home() {
   return (
-    <div className="home-body">
+    <div className="">  
       <div className="home-container">
         {/* Sidebar */}
         <div className="sidebar">

@@ -5,7 +5,7 @@
     box-sizing: border-box;
   }
   
-  body { 
+  .home-body { 
     font-family: Arial, sans-serif;
     background-color: #fafafa;
     height: 100vh; 
