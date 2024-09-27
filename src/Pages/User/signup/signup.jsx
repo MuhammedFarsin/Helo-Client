@@ -3,10 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../Axios/axios";
-import "./signup.css"; // Make sure this path is correct or update it as needed
 
 function SignUpPage() {
-  // Declare state for form data
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -16,7 +14,6 @@ function SignUpPage() {
 
   const navigate = useNavigate();
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -25,91 +22,92 @@ function SignUpPage() {
     });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Send form data to the backend
       const response = await axiosInstance.post("/signup", formData);
       console.log(response.data);
-
-      // Set success message and navigate to OTP page
       toast.success("Verify your OTP...!");
       setTimeout(() => navigate("/verify-otp"), 2000);
     } catch {
-      // Handle error case
       toast.error("Failed to create an account. Please try again.");
     }
   };
 
   return (
-    <div className="signup-container">
-      <div className="signup-box">
-        <div className="signup-logo">
-          <img src="/src/assets/imageProject/logo.jpg" alt="Logo" className="signup-logo-image" />
+    <div className="flex justify-center items-center min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat p-4" style={{ backgroundImage: "url('/src/assets/imageProject/vecteezy_abstract-orange-wavy-background-orange-background-with_35768911.jpg')" }}>
+      {/* Increase the max-width to max-w-sm or max-w-md here */}
+      <div className="bg-white p-4 rounded-lg shadow-lg max-w-sm w-full">
+        <div className="flex justify-center mb-3">
+          <img src="/src/assets/imageProject/logo.jpg" alt="Logo" className="w-11 rounded-full" />
         </div>
-        <h2>Sign Up</h2>
-        <p>
-          Already have an account? <a href="/">Log in</a>
+        <h2 className="text-xl font-semibold text-gray-800 mb-2 text-center">Sign Up</h2>
+        <p className="text-gray-600 text-center mb-2">
+          Already have an account? <a href="/" className="text-orange-600 hover:underline">Log in</a>
         </p>
 
-        {/* Google Sign Up Button */}
-        <button className="signup-social-login google">
+        <button className="w-80 ml-4 flex items-center justify-center bg-white border border-gray-300 py-2 rounded-md mb-2 hover:bg-gray-100 transition">
           <FcGoogle size={20} />
-          Sign up with Google
+          <span className="ml-2">Sign up with Google</span>
         </button>
 
-        <div className="signup-divider">
-          <span>OR</span>
+        <div className="flex items-center my-2 w-80 ml-4">
+          <div className="flex-grow h-px bg-gray-300"></div>
+          <span className="px-3 text-gray-500">OR</span>
+          <div className="flex-grow h-px bg-gray-300"></div>
         </div>
 
-        <form className="signup-form" onSubmit={handleSubmit}>
-          <div className="signup-input-group">
+        <form className="w-80 ml-4" onSubmit={handleSubmit}>
+          <div className="mb-4">
             <input
               type="text"
-              placeholder="Username"
-              required
               name="username"
+              placeholder="Username"
               value={formData.username}
               onChange={handleInputChange}
-              className="signup-input"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
+              required
             />
           </div>
-          <div className="signup-input-group">
+          <div className="mb-4 relative">
             <input
               type="email"
-              placeholder="Email"
-              required
               name="email"
+              placeholder="Email"
               value={formData.email}
               onChange={handleInputChange}
-              className="signup-input"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
+              required
             />
           </div>
-          <div className="signup-input-group">
+          <div className="mb-4 relative">
             <input
               type="tel"
-              placeholder="Mobile number"
-              required
               name="phone"
+              placeholder="Mobile number"
               value={formData.phone}
               onChange={handleInputChange}
-              className="signup-input"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
+              required
             />
           </div>
-          <div className="signup-input-group">
+          <div className="mb-4 relative">
             <input
               type="password"
-              placeholder="Password"
-              required
               name="password"
+              placeholder="Password"
               value={formData.password}
               onChange={handleInputChange}
-              className="signup-input"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
+              required
             />
-            <span className="signup-toggle-password">Hide</span>
           </div>
-          <button type="submit" className="signup-button">Create an account</button>
+          <button
+            type="submit"
+            className="w-full py-3 bg-orange-600 text-white rounded-md hover:bg-orange-500 transition"
+          >
+            Create an account
+          </button>
         </form>
       </div>
     </div>

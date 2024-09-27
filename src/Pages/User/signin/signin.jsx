@@ -45,7 +45,7 @@ function SigninPage() {
     <div className="flex justify-center items-center h-screen bg-cover bg-center" style={{ backgroundImage: "url('/src/assets/imageProject/vecteezy_abstract-orange-wavy-background-orange-background-with_35768911.jpg')" }}>
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
         <div className="flex justify-center mb-6">
-          <img src="/src/assets/imageProject/logo.jpg" alt="Logo" className="w-16 rounded-full" />
+          <img src="/src/assets/imageProject/logo.jpg" alt="Logo" className="w-12 rounded-full" />
         </div>
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4">Log in</h2>
         <p className="text-center text-gray-600 mb-4">
