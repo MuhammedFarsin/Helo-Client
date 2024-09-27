@@ -90,7 +90,7 @@ function SigninPage() {
             />
           </div>
           <div className="text-right mb-4">
-            <a href="/forgot-password" className="text-orange-500 text-sm">Forgot your password?</a>
+            <a href="/email-password-reset" className="text-orange-500 text-sm">Forgot your password?</a>
           </div>
           <button
             type="submit"

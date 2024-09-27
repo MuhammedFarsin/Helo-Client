@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../Axios/axios";
 
-function OtpPage() {
+function PasswordOtpPage() {
   const inputsRef = useRef([]);
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
@@ -27,7 +27,7 @@ function OtpPage() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axiosInstance.post("/verify-otp", {
+      const response = await axiosInstance.post("#", {
         otp: otp.trim(),
       });
       if (response.data.message) {
@@ -79,4 +79,4 @@ function OtpPage() {
   );
 }
 
-export default OtpPage;
+export default PasswordOtpPage;

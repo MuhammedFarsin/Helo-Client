@@ -8,6 +8,7 @@ const Signin = React.lazy(() => import("./Components/User/SingIn"));
 const SignUp = React.lazy(() => import("./Components/User/SignUp"));
 const OtpPage = React.lazy(() => import("./Components/User/OtpPage"));
 const EmailResetPassword = React.lazy(() => import("./Components/User/EmailResetPassword"));
+const ResetPasswordOtp = React.lazy(() => import("./Components/User/ResetPasswordOtp"));
 const ResetPassword = React.lazy(() => import("./Components/User/ResetPassword"));
 const Home = React.lazy(() => import("./Components/User/Home"));
 
@@ -53,6 +54,14 @@ function App() {
             element={
               <ProtectedAuth>
                 <EmailResetPassword />
+              </ProtectedAuth>
+            }
+          />
+          <Route
+            path="/reset-password-otp"
+            element={
+              <ProtectedAuth>
+                <ResetPasswordOtp />
               </ProtectedAuth>
             }
           />
