@@ -42,7 +42,7 @@ function OtpPage() {
     }
   };
 
-  return (
+return (
     <div className="flex justify-center items-center min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat p-4" style={{ backgroundImage: "url('/src/assets/imageProject/vecteezy_abstract-orange-wavy-background-orange-background-with_35768911.jpg')" }}>
       <div className="bg-white p-6 rounded-lg shadow-md w-80 text-center">
         <h2 className="text-2xl font-semibold mb-4">Enter your OTP</h2>

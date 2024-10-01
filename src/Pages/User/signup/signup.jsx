@@ -46,9 +46,9 @@ function SignUpPage() {
           Already have an account? <a href="/" className="text-orange-600 hover:underline">Log in</a>
         </p>
 
-        <button className="w-80 ml-4 flex items-center justify-center bg-white border border-gray-300 py-2 rounded-md mb-2 hover:bg-gray-100 transition">
-          <FcGoogle size={20} />
-          <span className="ml-2">Sign up with Google</span>
+        <button className="flex items-center justify-center w-80 ml-4 text-gray-800 py-2 rounded-lg border mb-4 hover:bg-red-500 transition">
+          <FcGoogle size={20} className="mr-2" />
+          Log in with Google
         </button>
 
         <div className="flex items-center my-2 w-80 ml-4">

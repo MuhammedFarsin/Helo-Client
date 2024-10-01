@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../../Axios/axios";
+import axiosInstance from "../../Axios/axios";
 
 function PasswordOtpPage() {
   const inputsRef = useRef([]);
@@ -27,12 +27,12 @@ function PasswordOtpPage() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axiosInstance.post("#", {
+      const response = await axiosInstance.post("/verify-otp-resetpassword", {
         otp: otp.trim(),
       });
       if (response.data.message) {
-        console.log("OTP verified successfully, navigating to login");
-        navigate("/login");
+        console.log("OTP verified successfully");
+        navigate("/reset-password");
       } else {
         setError("Invalid OTP. Please try again.");
       }
