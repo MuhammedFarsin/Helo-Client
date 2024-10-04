@@ -2,7 +2,8 @@ import React, { Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedAuth from "./Routes/ProtectedAuth";
 import ProtectedRoute from "./Routes/ProtectedRoute";
-import "./App.css"
+import "./App.css";
+
 // Lazy load components
 const Signin = React.lazy(() => import("./Components/User/SingIn"));
 const SignUp = React.lazy(() => import("./Components/User/SignUp"));
@@ -17,70 +18,15 @@ function App() {
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <ProtectedAuth>
-                <Signin />
-              </ProtectedAuth>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <ProtectedAuth>
-                <Signin />
-              </ProtectedAuth>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <ProtectedAuth>
-                <SignUp />
-              </ProtectedAuth>
-            }
-          />
-          <Route
-            path="/verify-otp"
-            element={
-              <ProtectedAuth>
-                <OtpPage />
-              </ProtectedAuth>
-            }
-          />
-          <Route
-            path="/email-password-reset"
-            element={
-              <ProtectedAuth>
-                <EmailResetPassword />
-              </ProtectedAuth>
-            }
-          />
-          <Route
-            path="/reset-password-otp"
-            element={
-              <ProtectedAuth>
-                <ResetPasswordOtp />
-              </ProtectedAuth>
-            }
-          />
-          <Route
-            path="/reset-password"
-            element={
-              <ProtectedAuth>
-                <ResetPassword />
-              </ProtectedAuth>
-            }
-          />
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/" element={<ProtectedAuth><Signin /></ProtectedAuth>} />
+          <Route path="/login" element={<ProtectedAuth><Signin /></ProtectedAuth>} />
+          <Route path="/signup" element={<ProtectedAuth><SignUp /></ProtectedAuth>} />
+          <Route path="/verify-otp" element={<ProtectedAuth><OtpPage /></ProtectedAuth>} />
+          <Route path="/email-password-reset" element={<ProtectedAuth><EmailResetPassword /></ProtectedAuth>} />
+          <Route path="/reset-password-otp" element={<ProtectedAuth><ResetPasswordOtp /></ProtectedAuth>} />
+          <Route path="/reset-password" element={<ProtectedAuth><ResetPassword /></ProtectedAuth>} />
+          <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+          <Route path="*" element={<div>404 - Page Not Found</div>} />
         </Routes>
       </Suspense>
     </Router>

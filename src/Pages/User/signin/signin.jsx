@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import axiosInstance from "../../../Axios/axios";
 import localStorage from "redux-persist/lib/storage";
@@ -6,8 +6,8 @@ import { useDispatch } from "react-redux";
 import { login } from "../../../Redux/Slices/authSlice";
 import { setUser } from "../../../Redux/Slices/userSlice";
 import { toast } from "react-toastify";
-import * as jwt_decode from "jwt-decode";
-
+// import * as jwt_decode from "jwt-decode";
+import { useGoogleLogin } from "@react-oauth/google";
 
 function SigninPage() {
   const [username, setUsername] = useState("");
@@ -42,44 +42,63 @@ function SigninPage() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    window.open("http://localhost:4000/auth/google", "_self");
+  //   const handleGoogleLogin = () => {
+  //     window.open("http://localhost:4000/auth/google", "_self");
+  // };
+
+  // const loginWithGoogle = useGoogleLogin({
+  //   onSuccess: async (tokenResponse) => {
+  //     console.log(tokenResponse);
+
+  //     // Send the token to the backend for further verification
+  //     try {
+  //       const response = await axiosInstance.post('http://localhost:4000/auth/google', {
+  //         token: tokenResponse.access_token,
+  //       });
+
+  //       // Handle the response, save token in localStorage or state
+  //       console.log('Login Success:', response.data);
+  //       localStorage.setItem('token', response.data.token);
+  //       dispatch(login(response.data.user)); // Assuming your action takes user data
+  //     } catch (error) {
+  //       console.error('Login failed:', error);
+  //       toast.error('Login failed. Please try again.');
+  //     }
+  //   },
+  //   onError: (error) => {
+  //     console.error('Login Failed:', error);
+  //     toast.error('Login failed. Please try again.');
+  //   },
+  // });
+  const responseGoogle = async (authResult) => {
+    try {
+      if (authResult.code) {
+        // Send the authorization code to the backend
+        const response = await axiosInstance.post("/auth/google", {
+          code: authResult.code,
+        });
+
+        // Handle the response, save the token in localStorage or state
+        console.log("Login Success:", response.data);
+        localStorage.setItem("accessToken", response.data.token);
+        dispatch(login());
+        dispatch(setUser(response.data.user));
+        toast.success("Login successful!"); // Assuming your action takes user data
+      } else {
+        console.error("No authorization code received");
+      }
+    } catch (error) {
+      console.error("Error during Google login:", error);
+    }
   };
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");  // Extract token from the URL
-    console.log(token)
-    console.log(urlParams)
-    if (token) {
-      localStorage.setItem("accessToken", token);  // Store the token in local storage
-      
-      try {
-        // Decode the JWT token
-        const decodedToken = jwt_decode(token);
-        console.log("Decoded Token:", decodedToken);
-        
-        if (decodedToken && decodedToken.id && decodedToken.email) {
-          // Dispatch user data to the store
-          dispatch(
-            setUser({
-              id: decodedToken.id,
-              email: decodedToken.email,
-              name: decodedToken.name || "User",  // If name is missing, fallback to "User"
-            })
-          );
-          dispatch(login());  // Mark user as logged in
-          toast.success("Google login successful!");
-        } else {
-          toast.error("Invalid token data.");
-        }
-      } catch (error) {
-        console.error("Error decoding token:", error);
-        toast.error("Failed to decode token.");
-      }
-    }
-  }, [dispatch]);
-
+  const googleLogin = useGoogleLogin({
+    onSuccess: responseGoogle,
+    onError: (error) => {
+      console.error("Login Failed:", error);
+    },
+    flow: "auth-code",
+  });
   return (
     <div
       className="flex justify-center items-center h-screen bg-cover bg-center"
@@ -112,7 +131,7 @@ function SigninPage() {
         {/* Google Login Button */}
         <button
           className="flex items-center justify-center w-full text-gray-800 py-2 rounded-lg border mb-4 hover:bg-red-500 transition"
-          onClick={handleGoogleLogin}
+          onClick={googleLogin}
         >
           <FcGoogle size={20} className="mr-2" />
           Log in with Google
