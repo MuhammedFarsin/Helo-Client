@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import axiosInstance from "../../../Axios/axios";
+import axiosInstance, { googleAuth } from "../../../Axios/axios";
 import localStorage from "redux-persist/lib/storage";
 import { useDispatch } from "react-redux";
 import { login } from "../../../Redux/Slices/authSlice";
 import { setUser } from "../../../Redux/Slices/userSlice";
 import { toast } from "react-toastify";
-// import * as jwt_decode from "jwt-decode";
 import { useGoogleLogin } from "@react-oauth/google";
 
 function SigninPage() {
@@ -41,61 +40,30 @@ function SigninPage() {
       console.error("Login error:", error);
     }
   };
-
-  //   const handleGoogleLogin = () => {
-  //     window.open("http://localhost:4000/auth/google", "_self");
-  // };
-
-  // const loginWithGoogle = useGoogleLogin({
-  //   onSuccess: async (tokenResponse) => {
-  //     console.log(tokenResponse);
-
-  //     // Send the token to the backend for further verification
-  //     try {
-  //       const response = await axiosInstance.post('http://localhost:4000/auth/google', {
-  //         token: tokenResponse.access_token,
-  //       });
-
-  //       // Handle the response, save token in localStorage or state
-  //       console.log('Login Success:', response.data);
-  //       localStorage.setItem('token', response.data.token);
-  //       dispatch(login(response.data.user)); // Assuming your action takes user data
-  //     } catch (error) {
-  //       console.error('Login failed:', error);
-  //       toast.error('Login failed. Please try again.');
-  //     }
-  //   },
-  //   onError: (error) => {
-  //     console.error('Login Failed:', error);
-  //     toast.error('Login failed. Please try again.');
-  //   },
-  // });
   const responseGoogle = async (authResult) => {
     try {
-      if (authResult.code) {
-        // Send the authorization code to the backend
-        const response = await axiosInstance.post("/auth/google", {
-          code: authResult.code,
-        });
-
-        // Handle the response, save the token in localStorage or state
-        console.log("Login Success:", response.data);
-        localStorage.setItem("accessToken", response.data.token);
+      if (authResult['code']) {
+        const response = await googleAuth(authResult['code']);
+  
+        localStorage.setItem("accessToken", response.data.token); 
         dispatch(login());
         dispatch(setUser(response.data.user));
-        toast.success("Login successful!"); // Assuming your action takes user data
+        toast.success("Login successful!");
+  
       } else {
         console.error("No authorization code received");
       }
     } catch (error) {
       console.error("Error during Google login:", error);
+      toast.error("Login failed");
     }
   };
-
+  
   const googleLogin = useGoogleLogin({
     onSuccess: responseGoogle,
     onError: (error) => {
       console.error("Login Failed:", error);
+      toast.error("Login failed");
     },
     flow: "auth-code",
   });

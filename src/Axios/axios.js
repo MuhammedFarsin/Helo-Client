@@ -1,14 +1,16 @@
-import axios from "axios"
-
+import axios from "axios"; 
+import { baseURL } from "../Config/config";
+//AXIOS INSTANCE
 const axiosInstance = axios.create({
-    baseURL: "http://localhost:4000",
-    headers: {
-        "Content-Type": "application/json",
-      },
-})
+  baseURL: baseURL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken"); // Retrieve token from localStorage
+    const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     } else {
@@ -20,4 +22,9 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-export default axiosInstance
+
+export default axiosInstance;
+
+export const googleAuth = (code) => {
+  return axiosInstance.get(`/auth/google?code=${code}`);
+};

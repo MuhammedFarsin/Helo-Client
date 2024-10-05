@@ -26,24 +26,38 @@ function OtpPage() {
   };
 
   const handleSubmit = async () => {
+    const email = localStorage.getItem("email"); // Retrieve email from localStorage
+    if (!email) {
+      setError("Email not found. Please try again.");
+      return;
+    }
+
     try {
       const response = await axiosInstance.post("/verify-otp", {
+        email,
         otp: otp.trim(),
       });
+      console.log(response);
       if (response.data.message) {
         console.log("OTP verified successfully, navigating to login");
         navigate("/login");
       } else {
         setError("Invalid OTP. Please try again.");
       }
-    // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars
     } catch (error) {
       setError("An error occurred while verifying OTP.");
     }
   };
 
-return (
-    <div className="flex justify-center items-center min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat p-4" style={{ backgroundImage: "url('/src/assets/imageProject/vecteezy_abstract-orange-wavy-background-orange-background-with_35768911.jpg')" }}>
+  return (
+    <div
+      className="flex justify-center items-center min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat p-4"
+      style={{
+        backgroundImage:
+          "url('/src/assets/imageProject/vecteezy_abstract-orange-wavy-background-orange-background-with_35768911.jpg')",
+      }}
+    >
       <div className="bg-white p-6 rounded-lg shadow-md w-80 text-center">
         <h2 className="text-2xl font-semibold mb-4">Enter your OTP</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
