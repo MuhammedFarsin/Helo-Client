@@ -1,5 +1,6 @@
 import React from "react"
-import Email_ResetPassword from "../../Pages/User/reset-password-mail/reset-password-mail"
+import Email_ResetPassword from "../../Pages/Auth/reset-password-mail"
+
 
 function EmailResetPassword() {
   return (

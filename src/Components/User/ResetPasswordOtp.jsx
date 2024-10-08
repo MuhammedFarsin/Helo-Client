@@ -1,5 +1,5 @@
 import React from 'react'
-import ResetPasswordOtpComponent from "../../Pages/User/password-otp";
+import ResetPasswordOtpComponent from "../../Pages/Auth/password-otp";
 
 
 function ResetPasswordOtp() {

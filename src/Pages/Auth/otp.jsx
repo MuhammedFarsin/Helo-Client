@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../../Axios/axios";
+import axiosInstance from "../../Axios/axios";
 
 function OtpPage() {
   const inputsRef = useRef([]);

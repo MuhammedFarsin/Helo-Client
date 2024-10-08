@@ -1,5 +1,5 @@
 import React from "react"
-import Reset_password from "../../Pages/User/resetpassword/reset-Password"
+import Reset_password from "../../Pages/Auth/reset-Password"
 function ResetNewPassword() {
   return (
     <div>

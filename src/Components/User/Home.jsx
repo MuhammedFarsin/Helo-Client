@@ -1,5 +1,5 @@
 import React from "react"
-import Home_page from "../../Pages/User/home/home"
+import Home_page from "../../Pages/home/home"
 
 function Home() {
   return (

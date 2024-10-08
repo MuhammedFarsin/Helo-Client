@@ -1,5 +1,5 @@
 import React from "react";
-import Otp_page from "../../Pages/User/otp/otp";
+import Otp_page from "../../Pages/Auth/otp";
 
 function OtpPage(){
     return(

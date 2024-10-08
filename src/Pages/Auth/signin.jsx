@@ -1,23 +1,36 @@
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import axiosInstance, { googleAuth } from "../../../Axios/axios";
+import axiosInstance, { googleAuth } from "../../Axios/axios";
 import localStorage from "redux-persist/lib/storage";
 import { useDispatch } from "react-redux";
-import { login } from "../../../Redux/Slices/authSlice";
-import { setUser } from "../../../Redux/Slices/userSlice";
-import { toast } from "react-toastify";
+import { login } from "../../Redux/Slices/authSlice";
+import { setUser } from "../../Redux/Slices/userSlice";
+import { toast, Toaster } from "sonner"; // Ensure you're importing from react-hot-toast
 import { useGoogleLogin } from "@react-oauth/google";
+import { validateForm } from "../../Utils/AuthValidationForm/FormValidation";
 
 function SigninPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    const formData = { username, password };
+    const validationErrors = validateForm(formData, false);
+    const hasErrors = Object.values(validationErrors).some(
+      (error) => error !== ""
+    );
+    if (hasErrors) {
+      Object.values(validationErrors).forEach((error) => {
+        if (error) {
+          toast.error(error);
+        }
+      });
+      return;
+    }
+
     try {
       const response = await axiosInstance.post("/login", {
         username,
@@ -32,33 +45,33 @@ function SigninPage() {
         dispatch(setUser(response.data.user));
         toast.success("Login successful!");
       } else {
-        setError("Invalid username or password. Please try again.");
         toast.error("Invalid Password or Username...!");
       }
     } catch (error) {
-      setError("An error occurred during login. Please try again.");
       console.error("Login error:", error);
+      toast.error("An error occurred during login. Please try again.");
     }
   };
+
   const responseGoogle = async (authResult) => {
     try {
-      if (authResult['code']) {
-        const response = await googleAuth(authResult['code']);
-  
-        localStorage.setItem("accessToken", response.data.token); 
+      if (authResult["code"]) {
+        const response = await googleAuth(authResult["code"]);
+
+        localStorage.setItem("accessToken", response.data.token);
         dispatch(login());
         dispatch(setUser(response.data.user));
         toast.success("Login successful!");
-  
       } else {
         console.error("No authorization code received");
+        toast.error("No authorization code received");
       }
     } catch (error) {
       console.error("Error during Google login:", error);
       toast.error("Login failed");
     }
   };
-  
+
   const googleLogin = useGoogleLogin({
     onSuccess: responseGoogle,
     onError: (error) => {
@@ -67,6 +80,7 @@ function SigninPage() {
     },
     flow: "auth-code",
   });
+
   return (
     <div
       className="flex justify-center items-center h-screen bg-cover bg-center"
@@ -96,7 +110,6 @@ function SigninPage() {
           </a>
         </p>
 
-        {/* Google Login Button */}
         <button
           className="flex items-center justify-center w-full text-gray-800 py-2 rounded-lg border mb-4 hover:bg-red-500 transition"
           onClick={googleLogin}
@@ -110,8 +123,6 @@ function SigninPage() {
           <span className="px-4 text-gray-500">OR</span>
           <span className="flex-1 h-px bg-gray-300"></span>
         </div>
-
-        {error && <p className="text-center text-red-500 mb-4">{error}</p>}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -152,6 +163,7 @@ function SigninPage() {
           </button>
         </form>
       </div>
+      <Toaster position="bottom-right" richColors />
     </div>
   );
 }
