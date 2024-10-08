@@ -5,9 +5,10 @@ import localStorage from "redux-persist/lib/storage";
 import { useDispatch } from "react-redux";
 import { login } from "../../Redux/Slices/authSlice";
 import { setUser } from "../../Redux/Slices/userSlice";
-import { toast, Toaster } from "sonner"; // Ensure you're importing from react-hot-toast
+import { toast } from "sonner";
 import { useGoogleLogin } from "@react-oauth/google";
-import { validateForm } from "../../Utils/AuthValidationForm/FormValidation";
+import { validateForm } from "../../Utils/AuthValidationForm/loginValdation";
+import ToasterHot from "../Common/ToasterHot";
 
 function SigninPage() {
   const [username, setUsername] = useState("");
@@ -18,10 +19,13 @@ function SigninPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = { username, password };
-    const validationErrors = validateForm(formData, false);
+
+    // Use loginValidation instead of validateForm
+    const validationErrors = validateForm(formData);
     const hasErrors = Object.values(validationErrors).some(
       (error) => error !== ""
     );
+    
     if (hasErrors) {
       Object.values(validationErrors).forEach((error) => {
         if (error) {
@@ -32,12 +36,7 @@ function SigninPage() {
     }
 
     try {
-      const response = await axiosInstance.post("/login", {
-        username,
-        password,
-      });
-
-      console.log(response);
+      const response = await axiosInstance.post("/login", { username, password });
 
       if (response.status === 200 && response.data.token) {
         localStorage.setItem("accessToken", response.data.token);
@@ -63,7 +62,6 @@ function SigninPage() {
         dispatch(setUser(response.data.user));
         toast.success("Login successful!");
       } else {
-        console.error("No authorization code received");
         toast.error("No authorization code received");
       }
     } catch (error) {
@@ -75,8 +73,7 @@ function SigninPage() {
   const googleLogin = useGoogleLogin({
     onSuccess: responseGoogle,
     onError: (error) => {
-      console.error("Login Failed:", error);
-      toast.error("Login failed");
+      toast.error("Google login failed.",error);
     },
     flow: "auth-code",
   });
@@ -163,7 +160,7 @@ function SigninPage() {
           </button>
         </form>
       </div>
-      <Toaster position="bottom-right" richColors />
+      <ToasterHot />
     </div>
   );
 }
