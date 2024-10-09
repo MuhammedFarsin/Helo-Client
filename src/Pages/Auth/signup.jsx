@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import axiosInstance, { googleAuth } from "../../Axios/axios";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../Redux/Slices/userSlice";
 import { login } from "../../Redux/Slices/authSlice";
 import { useGoogleLogin } from "@react-oauth/google";
 import { validateForm } from "../../Utils/AuthValidationForm/FormValidation";
+import ToasterHot from "../Common/ToasterHot";
 
 function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -177,7 +178,7 @@ function SignUpPage() {
           </button>
         </form>
       </div>
-      <Toaster position="bottom-right" richColors />
+      <ToasterHot/>
     </div>
   );
 }

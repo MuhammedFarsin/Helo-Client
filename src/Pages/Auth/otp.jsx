@@ -1,13 +1,21 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../Axios/axios";
+import { toast } from "sonner";
+import ToasterHot from "../Common/ToasterHot";
+import Timer from "../Common/TimeStamp"
 
 function OtpPage() {
   const inputsRef = useRef([]);
   const [otp, setOtp] = useState("");
-  const [error, setError] = useState("");
+  const [timerExpired, setTimerExpired] = useState(false); // State to track if the timer has expired
 
   const navigate = useNavigate();
+  useEffect(() => {
+    if (inputsRef.current[0]) {
+      inputsRef.current[0].focus();
+    }
+  }, []);
 
   const handleChange = (e, index) => {
     let value = e.target.value;
@@ -26,9 +34,9 @@ function OtpPage() {
   };
 
   const handleSubmit = async () => {
-    const email = localStorage.getItem("email"); // Retrieve email from localStorage
+    const email = localStorage.getItem("email");
     if (!email) {
-      setError("Email not found. Please try again.");
+      toast.error("User not found...!");
       return;
     }
 
@@ -37,17 +45,27 @@ function OtpPage() {
         email,
         otp: otp.trim(),
       });
+    
       console.log(response);
+    
       if (response.data.message) {
         console.log("OTP verified successfully, navigating to login");
-        navigate("/login");
+        toast.success(response.data.message);
+    
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
       } else {
-        setError("Invalid OTP. Please try again.");
+        toast.error("Invalid OTP. Please try again.");
       }
-      // eslint-disable-next-line no-unused-vars
     } catch (error) {
-      setError("An error occurred while verifying OTP.");
+      toast.error("Error while Verify otp",error);
     }
+  };
+
+  const handleTimerExpire = () => {
+    setTimerExpired(true);
+    toast.error("Time expired. Please request a new OTP.");
   };
 
   return (
@@ -60,7 +78,6 @@ function OtpPage() {
     >
       <div className="bg-white p-6 rounded-lg shadow-md w-80 text-center">
         <h2 className="text-2xl font-semibold mb-4">Enter your OTP</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
         <div className="flex justify-between mb-6">
           {Array(4)
             .fill()
@@ -79,9 +96,13 @@ function OtpPage() {
         <button
           className="w-full py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-500 transition-colors"
           onClick={handleSubmit}
+          disabled={timerExpired} // Disable the button if the timer has expired
         >
           Confirm OTP
         </button>
+        <br/>
+        <br/>
+        <Timer duration={30} onExpire={handleTimerExpire} />
         <a
           href="/resend-otp"
           className="block text-gray-500 mt-4 hover:underline"
@@ -89,6 +110,7 @@ function OtpPage() {
           Resend OTP
         </a>
       </div>
+      <ToasterHot />
     </div>
   );
 }

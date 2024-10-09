@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import axiosInstance, { googleAuth } from "../../Axios/axios";
-import localStorage from "redux-persist/lib/storage";
 import { useDispatch } from "react-redux";
 import { login } from "../../Redux/Slices/authSlice";
 import { setUser } from "../../Redux/Slices/userSlice";
@@ -39,12 +38,19 @@ function SigninPage() {
       const response = await axiosInstance.post("/login", { username, password });
 
       if (response.status === 200 && response.data.token) {
-        localStorage.setItem("accessToken", response.data.token);
-        dispatch(login());
-        dispatch(setUser(response.data.user));
-        toast.success("Login successful!");
-      } else {
-        toast.error("Invalid Password or Username...!");
+        console.log(response)
+        window.localStorage.setItem("accessToken", response.data.token);
+        // dispatch(login());
+        // dispatch(setUser(response.data.user));
+        if (response.data.message) {
+          toast.success(response.data.message);
+        } else {
+          toast.success("Login successful!"); // Fallback message
+        }
+        setTimeout(() => {
+          dispatch(login());
+          dispatch(setUser(response.data.user));
+        }, 500);
       }
     } catch (error) {
       console.error("Login error:", error);
