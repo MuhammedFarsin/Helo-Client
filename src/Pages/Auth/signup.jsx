@@ -9,6 +9,8 @@ import { login } from "../../Redux/Slices/authSlice";
 import { useGoogleLogin } from "@react-oauth/google";
 import { validateForm } from "../../Utils/AuthValidationForm/FormValidation";
 import ToasterHot from "../Common/ToasterHot";
+import AuthShimmerUI from "../Common/ShimmerUI/AuthShimmerUI";
+import useAuthShimmer from "../../Hook/LoadingHook";
 
 function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -20,6 +22,7 @@ function SignUpPage() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { loading, startLoading, stopLoading } = useAuthShimmer();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -31,12 +34,11 @@ function SignUpPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const validationErrors = validateForm(formData);
-
     const hasErrors = Object.values(validationErrors).some(
       (error) => error !== ""
     );
+
     if (hasErrors) {
       Object.values(validationErrors).forEach((error) => {
         if (error) {
@@ -45,6 +47,8 @@ function SignUpPage() {
       });
       return;
     }
+
+    startLoading();
 
     try {
       const response = await axiosInstance.post("/signup", formData);
@@ -55,6 +59,8 @@ function SignUpPage() {
     } catch (error) {
       toast.error("Failed to create an account. Please try again.");
       console.error(error);
+    } finally {
+      stopLoading();
     }
   };
 
@@ -67,6 +73,7 @@ function SignUpPage() {
         dispatch(login());
         dispatch(setUser(response.data.user));
         toast.success("Login successful!");
+        setTimeout(() => navigate("/"), 2000);
       } else {
         console.error("No authorization code received");
       }
@@ -84,6 +91,10 @@ function SignUpPage() {
     },
     flow: "auth-code",
   });
+
+  if (loading) {
+    return <AuthShimmerUI />;
+  }
 
   return (
     <div
@@ -178,7 +189,7 @@ function SignUpPage() {
           </button>
         </form>
       </div>
-      <ToasterHot/>
+      <ToasterHot />
     </div>
   );
 }

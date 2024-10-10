@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { googleAuthClientId } from "./Config/config.jsx";
+import LoadingPage from "./Pages/Common/LoadingPage.jsx";
 
 let persistor = persistStore(store);
 
@@ -16,7 +17,7 @@ const googleClientId = googleAuthClientId;
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
-      <PersistGate persistor={persistor} loading={<div>Loading...</div>}>
+      <PersistGate persistor={persistor} loading={<LoadingPage/>}>
         <GoogleOAuthProvider clientId={googleClientId}>
           <App />
           <ToastContainer />

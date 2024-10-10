@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedAuth from "./Routes/ProtectedAuth";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import "./App.css";
-
+import LoadingPage from "./Pages/Common/LoadingPage";
+import PageNotFound from "./Pages/Common/PageNotFound";
 // Lazy load components
 const Signin = React.lazy(() => import("./Components/User/SingIn"));
 const SignUp = React.lazy(() => import("./Components/User/SignUp"));
@@ -16,7 +17,7 @@ const Home = React.lazy(() => import("./Components/User/Home"));
 function App() {
   return (
     <Router>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingPage/>}>
         <Routes>
           <Route path="/" element={<ProtectedAuth><Signin /></ProtectedAuth>} />
           <Route path="/login" element={<ProtectedAuth><Signin /></ProtectedAuth>} />
@@ -26,7 +27,7 @@ function App() {
           <Route path="/reset-password-otp" element={<ProtectedAuth><ResetPasswordOtp /></ProtectedAuth>} />
           <Route path="/reset-password" element={<ProtectedAuth><ResetPassword /></ProtectedAuth>} />
           <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-          <Route path="*" element={<div>404 - Page Not Found</div>} />
+          <Route path="*" element={<PageNotFound/>} />
         </Routes>
       </Suspense>
     </Router>
