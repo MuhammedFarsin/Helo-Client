@@ -9,8 +9,6 @@ import { login } from "../../Redux/Slices/authSlice";
 import { useGoogleLogin } from "@react-oauth/google";
 import { validateForm } from "../../Utils/AuthValidationForm/FormValidation";
 import ToasterHot from "../Common/ToasterHot";
-import AuthShimmerUI from "../Common/ShimmerUI/AuthShimmerUI";
-import useAuthShimmer from "../../Hook/LoadingHook";
 
 function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -22,7 +20,6 @@ function SignUpPage() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, startLoading, stopLoading } = useAuthShimmer();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -48,20 +45,18 @@ function SignUpPage() {
       return;
     }
 
-    startLoading();
+    // startLoading();
 
     try {
       const response = await axiosInstance.post("/signup", formData);
       console.log(response.data);
       localStorage.setItem("email", response.data.tempUser.email);
-      toast.success("Verify your OTP...!");
+      toast.success(response.data.message);
       setTimeout(() => navigate("/verify-otp"), 2000);
     } catch (error) {
       toast.error("Failed to create an account. Please try again.");
       console.error(error);
-    } finally {
-      stopLoading();
-    }
+    } 
   };
 
   const responseGoogle = async (authResult) => {
@@ -91,10 +86,6 @@ function SignUpPage() {
     },
     flow: "auth-code",
   });
-
-  if (loading) {
-    return <AuthShimmerUI />;
-  }
 
   return (
     <div

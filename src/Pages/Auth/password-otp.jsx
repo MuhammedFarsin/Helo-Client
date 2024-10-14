@@ -1,13 +1,22 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../Axios/axios";
+import { toast } from "sonner";
+import Timer from "../Common/TimeStamp";
+import ToasterHot from "../Common/ToasterHot";
 
 function PasswordOtpPage() {
   const inputsRef = useRef([]);
   const [otp, setOtp] = useState("");
-  const [error, setError] = useState("");
-
+  const [isResending, setIsResending] = useState(false);
   const navigate = useNavigate();
+  const duration = 60;
+
+  useEffect(() => {
+    if (inputsRef.current[0]) {
+      inputsRef.current[0].focus();
+    }
+  }, []);
 
   const handleChange = (e, index) => {
     let value = e.target.value;
@@ -26,27 +35,71 @@ function PasswordOtpPage() {
   };
 
   const handleSubmit = async () => {
+    if (otp.length !== 4) {
+      toast.error("Please enter a 4-digit OTP");
+      return;
+    }
+
     try {
       const response = await axiosInstance.post("/verify-otp-resetpassword", {
         otp: otp.trim(),
       });
-      if (response.data.message) {
-        console.log("OTP verified successfully");
-        navigate("/reset-password");
+
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        setTimeout(() => {
+          navigate("/reset-password");
+        }, 500);
       } else {
-        setError("Invalid OTP. Please try again.");
+        toast.error("Invalid OTP. Please try again.");
       }
-    // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+        toast.error(err.response.data.message);
+      } else if (err.response.status === 500) {
+        toast.error("Error sending OTP. Please try again.");
+      } else {
+        toast.error("An error occurred while verifying OTP.");
+      }
+    }
+  };
+
+  const handleTimerExpire = () => {
+    toast.error("OTP has expired. Please request a new one.");
+  };
+
+  const resendOtp = async () => {
+    const email = localStorage.getItem("email");
+    if (!email) {
+      toast.error("User not found...!");
+      return;
+    }
+
+    try {
+      setIsResending(true); 
+      const response = await axiosInstance.post("/resend-otp", { email });
+      toast.success(response.data.message);
+      
+      setTimeout(() => {
+        setIsResending(false);
+      }, 30000);
     } catch (error) {
-      setError("An error occurred while verifying OTP.");
+      toast.error("Error while resending OTP");
+      setIsResending(false); 
+      console.log("Internal Server Error",error)
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat p-4" style={{ backgroundImage: "url('/src/assets/imageProject/vecteezy_abstract-orange-wavy-background-orange-background-with_35768911.jpg')" }}>
+    <div
+      className="flex justify-center items-center min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat p-4"
+      style={{
+        backgroundImage:
+          "url('/src/assets/imageProject/vecteezy_abstract-orange-wavy-background-orange-background-with_35768911.jpg')",
+      }}
+    >
       <div className="bg-white p-6 rounded-lg shadow-md w-80 text-center">
         <h2 className="text-2xl font-semibold mb-4">Enter your OTP</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
         <div className="flex justify-between mb-6">
           {Array(4)
             .fill()
@@ -68,12 +121,17 @@ function PasswordOtpPage() {
         >
           Confirm OTP
         </button>
-        <a
-          href="/resend-otp"
-          className="block text-gray-500 mt-4 hover:underline"
+        <div className="flex justify-start mt-4">
+          <Timer duration={duration} onExpire={handleTimerExpire} />
+        </div>
+        <button
+          onClick={resendOtp}
+          disabled={isResending} 
+          className={`block text-gray-500 mt-4 hover:underline ${isResending ? "bg-gray-400" : "bg-transparent"}`}
         >
-          Resend OTP
-        </a>
+          {isResending ? "Resending..." : "Resend OTP"}
+        </button>
+        <ToasterHot />
       </div>
     </div>
   );

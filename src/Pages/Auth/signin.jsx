@@ -8,12 +8,10 @@ import { toast } from "sonner";
 import { useGoogleLogin } from "@react-oauth/google";
 import { validateForm } from "../../Utils/AuthValidationForm/loginValdation";
 import ToasterHot from "../Common/ToasterHot";
-import AuthShimmerUI from "../Common/ShimmerUI/AuthShimmerUI";
 
 function SigninPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false); // Loading state
 
   const dispatch = useDispatch();
 
@@ -35,9 +33,11 @@ function SigninPage() {
       return;
     }
 
-    setLoading(true); // Start loading
     try {
-      const response = await axiosInstance.post("/login", { username, password });
+      const response = await axiosInstance.post("/login", {
+        username,
+        password,
+      });
 
       if (response.status === 200 && response.data.token) {
         window.localStorage.setItem("accessToken", response.data.token);
@@ -48,12 +48,18 @@ function SigninPage() {
           dispatch(login());
           dispatch(setUser(response.data.user));
         }, 500);
+      } else if (response.status === 401) {
+        toast.error(response.data.message);
       }
     } catch (error) {
-      console.error("Login error:", error);
-      toast.error("An error occurred during login. Please try again.");
-    } finally {
-      setLoading(false); // Stop loading
+      if (error.response && error.response.status === 401) {
+        toast.error(error.response.data.message);
+      } else if (error.response && error.response.status === 404) {
+        toast.error(error.response.data.message);
+      } else {
+        console.error("Login error:", error);
+        toast.error("An error occurred during login. Please try again.");
+      }
     }
   };
 
@@ -126,48 +132,44 @@ function SigninPage() {
           <span className="flex-1 h-px bg-gray-300"></span>
         </div>
 
-        {loading ? (
-          <AuthShimmerUI /> // Show shimmer effect while loading
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Your Username"
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
-                style={{ fontFamily: "Roboto, sans-serif" }}
-              />
-            </div>
-            <div className="mb-4 relative">
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Your password"
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
-                style={{ fontFamily: "Roboto, sans-serif" }}
-              />
-            </div>
-            <div className="text-right mb-4">
-              <a href="/email-password-reset" className="text-orange-500 text-sm">
-                Forgot your password?
-              </a>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition"
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Your Username"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
               style={{ fontFamily: "Roboto, sans-serif" }}
-            >
-              Log in
-            </button>
-          </form>
-        )}
+            />
+          </div>
+          <div className="mb-4 relative">
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Your password"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
+              style={{ fontFamily: "Roboto, sans-serif" }}
+            />
+          </div>
+          <div className="text-right mb-4">
+            <a href="/email-password-reset" className="text-orange-500 text-sm">
+              Forgot your password?
+            </a>
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition"
+            style={{ fontFamily: "Roboto, sans-serif" }}
+          >
+            Log in
+          </button>
+        </form>
       </div>
       <ToasterHot />
     </div>

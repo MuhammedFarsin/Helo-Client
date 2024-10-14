@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import axiosInstance from "../../../Axios/axios";
+import axiosInstance from "../../Axios/axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import ToasterHot from "../Common/ToasterHot";
 
 function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -17,7 +18,7 @@ function ResetPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
     try {
@@ -26,11 +27,13 @@ function ResetPassword() {
       });
 
       if (response.status === 200) {
-        navigate("/login");
+        toast.success(response.data.message);
+        setTimeout(() => {
+          navigate("/login");
+        }, 500);
       }
-      // eslint-disable-next-line no-unused-vars
     } catch (err) {
-      setError("Error resetting password. Please try again.");
+      toast.error(err.response.message);
     }
   };
 
@@ -45,7 +48,6 @@ function ResetPassword() {
       <div className="bg-white p-8 rounded-lg shadow-md w-96 max-w-full text-center">
         <h2 className="mb-2 text-2xl font-bold">Reset Your Password</h2>
         <p className="mb-5 text-gray-600">Enter your new password below</p>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="relative mb-5">
             <input
@@ -88,6 +90,13 @@ function ResetPassword() {
             Continue
           </button>
         </form>
+        <ToasterHot/>
+        <button
+          onClick={() => navigate("/")}
+          className="mt-4 w-full p-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
+        >
+          Back to Home
+        </button>
       </div>
     </div>
   );

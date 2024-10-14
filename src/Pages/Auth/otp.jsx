@@ -2,15 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../Axios/axios";
 import { toast } from "sonner";
+import Timer from "../Common/TimeStamp";
 import ToasterHot from "../Common/ToasterHot";
-import Timer from "../Common/TimeStamp"
 
 function OtpPage() {
   const inputsRef = useRef([]);
   const [otp, setOtp] = useState("");
-  const [timerExpired, setTimerExpired] = useState(false); // State to track if the timer has expired
-
+  const [isResending, setIsResending] = useState(false);
   const navigate = useNavigate();
+  const duration = 10; // Set your desired OTP expiration time
+
   useEffect(() => {
     if (inputsRef.current[0]) {
       inputsRef.current[0].focus();
@@ -34,6 +35,11 @@ function OtpPage() {
   };
 
   const handleSubmit = async () => {
+    if (otp.length !== 4) {
+      toast.error("Please enter a 4-digit OTP");
+      return;
+    }
+
     const email = localStorage.getItem("email");
     if (!email) {
       toast.error("User not found...!");
@@ -45,27 +51,49 @@ function OtpPage() {
         email,
         otp: otp.trim(),
       });
-    
-      console.log(response);
-    
-      if (response.data.message) {
-        console.log("OTP verified successfully, navigating to login");
+
+      if (response.status === 200) {
         toast.success(response.data.message);
-    
         setTimeout(() => {
-          navigate("/login");
-        }, 1000);
+          navigate("/"); // Redirect to your desired page
+        }, 500);
       } else {
         toast.error("Invalid OTP. Please try again.");
       }
-    } catch (error) {
-      toast.error("Error while Verify otp",error);
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+        toast.error(err.response.data.message);
+      } else if (err.response.status === 500) {
+        toast.error("Error verifying OTP. Please try again.");
+      } else {
+        toast.error("An error occurred while verifying OTP.");
+      }
     }
   };
 
   const handleTimerExpire = () => {
-    setTimerExpired(true);
-    toast.error("Time expired. Please request a new OTP.");
+    toast.error("OTP has expired. Please request a new one.");
+  };
+
+  const resendOtp = async () => {
+    const email = localStorage.getItem("email");
+    if (!email) {
+      toast.error("User not found...!");
+      return;
+    }
+
+    try {
+      setIsResending(true); 
+      const response = await axiosInstance.post("/resend-otp", { email });
+      toast.success(response.data.message);
+      
+      setTimeout(() => {
+        setIsResending(false);
+      }, 30000); // Disable resending for 30 seconds to prevent spam
+    } catch (error) {
+      toast.error("Error while resending OTP.",error);
+      setIsResending(false);
+    }
   };
 
   return (
@@ -96,21 +124,21 @@ function OtpPage() {
         <button
           className="w-full py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-500 transition-colors"
           onClick={handleSubmit}
-          disabled={timerExpired} // Disable the button if the timer has expired
         >
           Confirm OTP
         </button>
-        <br/>
-        <br/>
-        <Timer duration={30} onExpire={handleTimerExpire} />
-        <a
-          href="/resend-otp"
-          className="block text-gray-500 mt-4 hover:underline"
+        <div className="flex justify-start mt-4">
+          <Timer duration={duration} onExpire={handleTimerExpire} />
+        </div>
+        <button
+          onClick={resendOtp}
+          disabled={isResending}
+          className={`block text-gray-500 mt-4 hover:underline ${isResending ? "bg-gray-400" : "bg-transparent"}`}
         >
-          Resend OTP
-        </a>
+          {isResending ? "Resending..." : "Resend OTP"}
+        </button>
+        <ToasterHot />
       </div>
-      <ToasterHot />
     </div>
   );
 }
