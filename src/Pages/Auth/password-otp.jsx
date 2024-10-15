@@ -77,7 +77,7 @@ function PasswordOtpPage() {
 
     try {
       setIsResending(true); 
-      const response = await axiosInstance.post("/resend-otp", { email });
+      const response = await axiosInstance.post("/password-resend-otp", { email });
       toast.success(response.data.message);
       
       setTimeout(() => {

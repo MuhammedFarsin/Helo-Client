@@ -10,7 +10,7 @@ function OtpPage() {
   const [otp, setOtp] = useState("");
   const [isResending, setIsResending] = useState(false);
   const navigate = useNavigate();
-  const duration = 10; // Set your desired OTP expiration time
+  const duration = 60;
 
   useEffect(() => {
     if (inputsRef.current[0]) {
@@ -52,16 +52,16 @@ function OtpPage() {
         otp: otp.trim(),
       });
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         toast.success(response.data.message);
         setTimeout(() => {
-          navigate("/"); // Redirect to your desired page
+          navigate("/");
         }, 500);
-      } else {
-        toast.error("Invalid OTP. Please try again.");
       }
     } catch (err) {
       if (err.response && err.response.status === 404) {
+        toast.error(err.response.data.message);
+      } else if (err.response.status === 409) {
         toast.error(err.response.data.message);
       } else if (err.response.status === 500) {
         toast.error("Error verifying OTP. Please try again.");
@@ -83,15 +83,15 @@ function OtpPage() {
     }
 
     try {
-      setIsResending(true); 
+      setIsResending(true);
       const response = await axiosInstance.post("/resend-otp", { email });
       toast.success(response.data.message);
-      
+
       setTimeout(() => {
         setIsResending(false);
       }, 30000); // Disable resending for 30 seconds to prevent spam
     } catch (error) {
-      toast.error("Error while resending OTP.",error);
+      toast.error("Error while resending OTP.", error);
       setIsResending(false);
     }
   };
@@ -133,7 +133,9 @@ function OtpPage() {
         <button
           onClick={resendOtp}
           disabled={isResending}
-          className={`block text-gray-500 mt-4 hover:underline ${isResending ? "bg-gray-400" : "bg-transparent"}`}
+          className={`block text-gray-500 mt-4 hover:underline ${
+            isResending ? "bg-gray-400" : "bg-transparent"
+          }`}
         >
           {isResending ? "Resending..." : "Resend OTP"}
         </button>
