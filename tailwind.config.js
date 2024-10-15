@@ -18,6 +18,12 @@ export default {
           '100%': { transform: 'translateX(100%)' },
         },
       },
+      screens: {
+        sm: '640px',
+        md: '768px', // Default md, tweak if necessary
+        lg: '1024px',
+        // Custom breakpoints can be added here
+      },
     },
   },
   plugins: [],

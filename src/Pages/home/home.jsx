@@ -11,37 +11,49 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../Redux/Slices/authSlice";
+import { useMediaQuery } from 'react-responsive';
 
 function Home() {
+  // Define media queries
+  const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
+  const isTablet = useMediaQuery({ query: '(min-width: 768px) and (max-width: 1023px)' });
+  const isLargeScreen = useMediaQuery({ query: '(min-width: 1024px)' });
+
   return (
     <div className="flex h-screen">
-      {/* Sidebar for larger screens */}
-      <div className="hidden lg:flex lg:flex-col lg:w-1/4 p-5 bg-white border-r">
-        <Sidebar />
-      </div>
+      {/* Sidebar for Tablets (md) and Large Screens (lg) */}
+      {isTablet || isLargeScreen ? (
+        <div className={`p-9 bg-white border-r ${isTablet ? "w-20" : "w-1/4"}`}>
+          <Sidebar type={isLargeScreen ? "full" : "icons"} />
+        </div>
+      ) : null}
 
       {/* Main Feed */}
       <div className="flex-1 p-5 overflow-y-auto">
         <Feed />
       </div>
 
-      {/* Footer with specific icons for mobile */}
-      <div className="fixed bottom-0 left-0 w-full bg-white border-t flex justify-around lg:hidden">
-        <FaHome className="text-2xl text-gray-800" />
-        <FaSearch className="text-2xl text-gray-800" />
-        <FaUser className="text-2xl text-gray-800" />
-      </div>
+      {/* Footer with specific icons for mobile (hidden on tablets and large screens) */}
+      {isMobile && (
+        <div className="fixed bottom-0 left-0 w-full bg-white border-t flex justify-around">
+          <FaHome className="text-2xl text-gray-800" />
+          <FaSearch className="text-2xl text-gray-800" />
+          <FaUser className="text-2xl text-gray-800" />
+        </div>
+      )}
 
-      {/* Right corner icons for mobile */}
-      <div className="fixed top-0 right-0 p-3 flex space-x-4 lg:hidden">
-        <FaEnvelope className="text-xl text-gray-800" />
-        <FaHeart className="text-xl text-gray-800" />
-      </div>
+      {/* Right corner icons for mobile (hidden on tablets and large screens) */}
+      {isMobile && (
+        <div className="fixed top-0 right-0 p-3 flex space-x-4">
+          <FaEnvelope className="text-xl text-gray-800" />
+          <FaHeart className="text-xl text-gray-800" />
+        </div>
+      )}
     </div>
   );
 }
 
-function Sidebar() {
+function Sidebar({ type }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -52,48 +64,54 @@ function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className={`flex flex-col space-y-4 ${type === "icons" ? "w-20" : "w-60"}`}>
       <ul className="space-y-5">
-        {/* Sidebar for large screens */}
-        <li className="flex items-center space-x-2 cursor-pointer text-lg text-gray-800">
-          <FaHome />
-          <span className="hidden lg:block">Home</span>
+        {/* Home */}
+        <li className="flex items-center justify-center lg:justify-start space-x-2 cursor-pointer text-lg text-gray-800">
+          <FaHome size={24} />
+          {type === "full" && <span className="hidden lg:inline">Home</span>}
         </li>
-        <li className="flex items-center space-x-2 cursor-pointer text-lg text-gray-800">
-          <FaSearch />
-          <span className="hidden lg:block">Search</span>
+        {/* Search */}
+        <li className="flex items-center justify-center lg:justify-start space-x-2 cursor-pointer text-lg text-gray-800">
+          <FaSearch size={24} />
+          {type === "full" && <span className="hidden lg:inline">Search</span>}
         </li>
-        <li className="flex items-center space-x-2 cursor-pointer text-lg text-gray-800">
-          <FaCompass />
-          <span className="hidden lg:block">Explore</span>
+        {/* Explore */}
+        <li className="flex items-center justify-center lg:justify-start space-x-2 cursor-pointer text-lg text-gray-800">
+          <FaCompass size={24} />
+          {type === "full" && <span className="hidden lg:inline">Explore</span>}
         </li>
-        <li className="flex items-center space-x-2 cursor-pointer text-lg text-gray-800">
-          <FaEnvelope />
-          <span className="hidden lg:block">Messages</span>
+        {/* Messages */}
+        <li className="flex items-center justify-center lg:justify-start space-x-2 cursor-pointer text-lg text-gray-800">
+          <FaEnvelope size={24} />
+          {type === "full" && <span className="hidden lg:inline">Messages</span>}
         </li>
-        <li className="flex items-center space-x-2 cursor-pointer text-lg text-gray-800">
-          <FaHeart />
-          <span className="hidden lg:block">Notifications</span>
+        {/* Notifications */}
+        <li className="flex items-center justify-center lg:justify-start space-x-2 cursor-pointer text-lg text-gray-800">
+          <FaHeart size={24} />
+          {type === "full" && <span className="hidden lg:inline">Notifications</span>}
         </li>
-        <li className="flex items-center space-x-2 cursor-pointer text-lg text-gray-800">
-          <FaPlusSquare />
-          <span className="hidden lg:block">Create</span>
+        {/* Create */}
+        <li className="flex items-center justify-center lg:justify-start space-x-2 cursor-pointer text-lg text-gray-800">
+          <FaPlusSquare size={24} />
+          {type === "full" && <span className="hidden lg:inline">Create</span>}
         </li>
-        <li className="flex items-center space-x-2 cursor-pointer text-lg text-gray-800">
-          <FaUser />
-          <span className="hidden lg:block">Profile</span>
+        {/* Profile */}
+        <li className="flex items-center justify-center lg:justify-start space-x-2 cursor-pointer text-lg text-gray-800">
+          <FaUser size={24} />
+          {type === "full" && <span className="hidden lg:inline">Profile</span>}
         </li>
+        {/* Logout */}
         <li
-          className="flex items-center space-x-2 cursor-pointer text-lg text-gray-800"
+          className="flex items-center justify-center lg:justify-start space-x-2 cursor-pointer text-lg text-gray-800"
           onClick={handleLogout}
         >
-          <FaSignOutAlt />
-          <span className="hidden lg:block">Logout</span>
+          <FaSignOutAlt size={24} />
+          {type === "full" && <span className="hidden lg:inline">Logout</span>}
         </li>
       </ul>
     </div>
   );
-  
 }
 
 function Feed() {
