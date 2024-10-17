@@ -28,13 +28,13 @@ function Navbar() {
           <div className={`fixed top-0 left-0 h-screen w-${isTablet ? '20' : '60'} bg-white shadow-lg flex flex-col justify-between`}>
             {/* Top Section: Menu Items */}
             <ul className="flex flex-col space-y-4 p-4 overflow-y-auto">
-              <SidebarItem icon={FaHome} label="Home" path="/" type={isLargeScreen ? "full" : "icons"} />
+              <SidebarItem icon={FaHome} label="Home" path="/home" type={isLargeScreen ? "full" : "icons"} />
               <SidebarItem icon={FaSearch} label="Search" path="/search" type={isLargeScreen ? "full" : "icons"} />
               <SidebarItem icon={FaCompass} label="Explore" path="/explore" type={isLargeScreen ? "full" : "icons"} />
               <SidebarItem icon={FaEnvelope} label="Messages" path="/messages" type={isLargeScreen ? "full" : "icons"} />
               <SidebarItem icon={FaHeart} label="Notifications" path="/notifications" type={isLargeScreen ? "full" : "icons"} />
               <SidebarItem icon={FaPlusSquare} label="Create" path="/create" type={isLargeScreen ? "full" : "icons"} />
-              <SidebarItem icon={FaUser} label="Profile" path="/profile" type={isLargeScreen ? "full" : "icons"} />
+              <SidebarItem icon={FaUser} label="Profile" path="/user-profile" type={isLargeScreen ? "full" : "icons"} />
             </ul>
 
             {/* Bottom Section: Logout */}
@@ -47,17 +47,30 @@ function Navbar() {
 
       {/* Mobile Navigation */}
       {isMobile && (
-        <div className="fixed bottom-0 left-0 w-full bg-white border-t flex justify-around">
-          <Link to="/">
-            <FaHome className="text-2xl text-gray-800" />
-          </Link>
-          <Link to="/search">
-            <FaSearch className="text-2xl text-gray-800" />
-          </Link>
-          <Link to="/profile">
-            <FaUser className="text-2xl text-gray-800" />
-          </Link>
-        </div>
+        <>
+          {/* Bottom navigation */}
+          <div className="fixed bottom-0 left-0 w-full bg-white border-t flex justify-around">
+            <Link to="/home">
+              <FaHome className="text-2xl text-gray-800" />
+            </Link>
+            <Link to="/search">
+              <FaSearch className="text-2xl text-gray-800" />
+            </Link>
+            <Link to="/profile">
+              <FaUser className="text-2xl text-gray-800" />
+            </Link>
+          </div>
+
+          {/* Top-right notification and message icons */}
+          <div className="fixed top-0 right-0 flex space-x-4 p-4">
+            <Link to="/notifications">
+              <FaHeart className="text-2xl text-gray-800" />
+            </Link>
+            <Link to="/messages">
+              <FaEnvelope className="text-2xl text-gray-800" />
+            </Link>
+          </div>
+        </>
       )}
     </>
   );
@@ -65,15 +78,15 @@ function Navbar() {
 
 function SidebarItem({ icon: Icon, label, path, type, onClick }) {
   return (
-    <li className="flex items-center space-x-4 cursor-pointer text-lg text-gray-800 px-5 py-2 hover:bg-gray-100 rounded-md" onClick={onClick}>
+    <li className="flex items-center space-x-4 cursor-pointer text-[15px] text-gray-800 px-5 py-2 hover:bg-gray-100 rounded-md" onClick={onClick}>
       {path ? (
         <Link to={path} className="flex items-center">
-          <Icon className="text-2xl" />
+          <Icon className="text-1xl" />
           {type === "full" && <span className="ml-2">{label}</span>}
         </Link>
       ) : (
         <div className="flex items-center">
-          <Icon className="text-2xl" />
+          <Icon className="text-1xl" />
           {type === "full" && <span className="ml-2">{label}</span>}
         </div>
       )}
