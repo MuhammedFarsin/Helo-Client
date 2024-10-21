@@ -2,6 +2,7 @@ import { FaHome, FaSearch, FaCompass, FaEnvelope, FaHeart, FaPlusSquare, FaUser,
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../Redux/Slices/authSlice";
+import { removeUser } from "../../Redux/Slices/userSlice";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 
@@ -11,18 +12,17 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
+    dispatch(removeUser())
     dispatch(logout());
     navigate("/");
   };
 
-  // Define media queries for different screen sizes
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
   const isTablet = useMediaQuery({ query: "(min-width: 768px) and (max-width: 1023px)" });
   const isLargeScreen = useMediaQuery({ query: "(min-width: 1024px)" });
 
   return (
     <>
-      {/* Sidebar for Tablets and Large Screens */}
       {(isTablet || isLargeScreen) && (
         <div className={`bg-white border-r ${isTablet ? "w-20" : "w-60"}`}>
           <div className={`fixed top-0 left-0 h-screen w-${isTablet ? '20' : '60'} bg-white shadow-lg flex flex-col justify-between`}>
