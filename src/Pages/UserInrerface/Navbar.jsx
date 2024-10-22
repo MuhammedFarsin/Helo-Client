@@ -1,8 +1,8 @@
 import { FaHome, FaSearch, FaCompass, FaEnvelope, FaHeart, FaPlusSquare, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { logout } from "../../Redux/Slices/authSlice";
-import { removeUser } from "../../Redux/Slices/userSlice";
+import { logout } from "../../Store/Slices/authSlice";
+import { removeUser } from "../../Store/Slices/userSlice";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 
