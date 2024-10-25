@@ -7,32 +7,33 @@ function UserProfile() {
   const posts = []; // Example posts array
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Include the Navbar */}
-      <Navbar />
+    <div className="min-h-screen flex">
+      {/* Sidebar */}
+      <div className="w-64 bg-gray-100 h-full">
+        <Navbar />
+      </div>
 
-      {/* User Profile Content */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col items-center">
-        <div className="w-full max-w-5xl mx-auto bg-white rounded-md shadow-md mt-5">
-          <div className="flex flex-col md:flex-row items-center md:items-start justify-between mb-6 p-4">
-            
+        <div className="w-full max-w-4xl bg-white rounded-md shadow-md mt-10">
+          <div className="flex flex-col lg:flex-row items-center justify-between mb-6 p-4 lg:p-8">
             {/* Profile Image */}
-            <div className="flex justify-center mb-4 md:mb-0">
+            <div className="flex justify-center mb-4 lg:mb-0">
               <img
                 src={user.profilePicture || "/default-profile.png"}
                 alt="Profile"
                 className="rounded-full object-cover border border-gray-300
-                w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40"  // Responsive image size
+                w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40"
               />
             </div>
 
             {/* Profile Info */}
-            <div className="flex-1 text-center md:text-left md:ml-10 lg:ml-60">
-              <div className="flex flex-col md:flex-row items-center justify-center md:justify-start mb-4">
-                <h2 className="font-bold text-lg md:text-2xl lg:text-3xl">
+            <div className="flex-1 text-center lg:text-left lg:ml-10">
+              <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-start mb-4">
+                <h2 className="font-bold text-xl lg:text-3xl">
                   {user.lastName || "Username"}
                 </h2>
-                <button className="ml-0 md:ml-4 px-4 py-2 bg-orange-500 text-white font-semibold rounded-md shadow hover:bg-orange-600 mt-2 md:mt-0">
+                <button className="ml-0 lg:ml-4 px-4 py-2 bg-orange-500 text-white font-semibold rounded-md shadow hover:bg-orange-600 mt-2 lg:mt-0">
                   Edit Profile
                 </button>
               </div>
@@ -43,7 +44,7 @@ function UserProfile() {
               </p>
 
               {/* User Stats */}
-              <div className="flex flex-col md:flex-row justify-center md:justify-start space-y-2 md:space-y-0 md:space-x-8 mt-4">
+              <div className="flex flex-col lg:flex-row justify-center lg:justify-start space-y-2 lg:space-y-0 lg:space-x-8 mt-4">
                 <p className="text-sm md:text-base lg:text-lg font-semibold">
                   <span className="font-bold">{posts.length}</span> posts
                 </p>
@@ -60,7 +61,7 @@ function UserProfile() {
           {/* Posts Section */}
           <div className="mt-8">
             {posts.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {posts.map((post) => (
                   <div key={post.id} className="relative group">
                     <img
