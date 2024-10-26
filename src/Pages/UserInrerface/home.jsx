@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 function Layout() {
   const user = useSelector((state) => state.user)
+  console.log(user)
   return (
     <div className="flex h-screen">
       {/* Sidebar */}

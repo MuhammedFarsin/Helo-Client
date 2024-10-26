@@ -5,6 +5,7 @@ import { logout } from "../../Store/Slices/authSlice";
 import { removeUser } from "../../Store/Slices/userSlice";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
+import { persistor } from "../../Store/Store";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -12,8 +13,12 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
-    dispatch(removeUser())
+    console.log('Before logout local storage:', localStorage); 
     dispatch(logout());
+    dispatch(removeUser());
+    persistor.purge();
+    localStorage.clear(); // Clear all local storage items
+    console.log('After logout local storage:', localStorage);
     navigate("/");
   };
 
