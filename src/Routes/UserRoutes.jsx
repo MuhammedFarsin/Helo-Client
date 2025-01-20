@@ -15,7 +15,7 @@ const Home = React.lazy(() => import("../Components/User/Home"));
 const User_Profile = React.lazy(() => import("../Components/User/User_Profile"))
 const Edit_UserProfile = React.lazy(() => import("../Components/User/EditUserProfile"))
 
-function UserRoute() {
+function UserRoutes() {
     return (
             <Routes>
                 <Route path="/" element={<ProtectedAuth><Signin /></ProtectedAuth>} />
@@ -33,4 +33,4 @@ function UserRoute() {
     );
 }
 
-export default UserRoute;
+export default React.memo(UserRoutes)

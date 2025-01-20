@@ -1,14 +1,19 @@
 import Navbar from "./Navbar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { PlusCircleIcon } from "@heroicons/react/solid";
 import { useMediaQuery } from "react-responsive";
+import Swal from 'sweetalert2';
+import axiosInstance from "../../Axios/axios"; // Make sure to import your axios instance
+import ToasterHot from "../Common/ToasterHot";
+import { toast } from "sonner";
+import defaultImage from "../../assets/imageProject/camera.jpg";
+import { setUser } from "../../Store/Slices/userSlice";
 
 // Component for large screens
 function LargeScreenProfile({ user, posts }) {
   return (
     <div className="flex flex-col items-center">
       <div className="w-full max-w-4xl bg-white rounded-md shadow-md mt-10 p-6">
-        {/* Flex Row for Profile Layout */}
         <ProfileInfo user={user} posts={posts} />
         <PostsSection posts={posts} />
       </div>
@@ -43,28 +48,102 @@ function MobileScreenProfile({ user, posts }) {
   );
 }
 
-// Profile Image component
 // Profile Information component
 function ProfileInfo({ user, posts }) {
+  const dispatch = useDispatch()
+  const handleAddHeloId = async () => {
+    const { value: heloId } = await Swal.fire({
+      text: "Enter your Helo ID",
+      input: 'text',  // Specify the input type directly
+      showCancelButton: true,
+      confirmButtonText: 'Submit',
+      cancelButtonText: 'Cancel',
+    });
+  
+    if (heloId) {
+      try {
+        const response = await axiosInstance.patch("/update-user-helo_id", {
+          heloId,
+          userId: user.id
+        });
+  
+        console.log(response.data);
+        dispatch(setUser({ ...user, helo_id: heloId }));
+  
+        Swal.fire('Success', 'Your ID has been updated!', 'success');
+      } catch (error) {
+        Swal.fire('Error', 'There was an error updating your ID', error.message);
+      }
+    }
+  };
+
+  const handleProfilePictureChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("profilePicture", file);
+  
+      try {
+        const response = await axiosInstance.patch(
+          "/user/updateProfilePicture",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        
+        // Assuming the response contains the updated user data with the profile picture URL
+        const updatedUser = response.data;
+  
+        // Updating user state with the new profile picture
+        dispatch(setUser({ ...user, profilePicture: updatedUser.profilePicture }));
+  
+        console.log(response.data);
+        toast.success("Profile picture updated successfully!");
+      } catch (error) {
+        toast.error("Error updating profile picture", error.message);
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between w-full px-4 py-6">
       {/* Profile Image */}
-      <div className="flex-shrink-0 mb-4 lg:mb-0 lg:mr-8">
+      <div className="flex-shrink-0 mb-4 lg:mb-0 lg:mr-8 relative">
         <ProfileImage user={user} size="w-24 h-24 lg:w-32 lg:h-32" />
+        <label className="absolute bottom-0 right-0 cursor-pointer bg-gray-200 p-1 rounded-full">
+          <input
+            type="file"
+            className="hidden"
+            accept="image/*"
+            onChange={handleProfilePictureChange}
+          />
+          <PlusCircleIcon className="w-6 h-6 text-gray-600" />
+        </label>
       </div>
 
       {/* Profile Info */}
       <div className="flex flex-col lg:flex-row lg:items-center w-full justify-between">
-        {/* Left Section: Username, Edit Button, and Bio */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
           {/* Username and Edit Profile */}
           <div className="flex items-center space-x-3 mb-2">
-            <h2 className="font-bold text-lg lg:text-2xl">
-              {user.username || "helo@_ID..."}
-            </h2>
-            <button className="text-sm px-3 py-1 border border-gray-300 rounded-lg">
-              Edit profile
-            </button>
+            {user.helo_id ? (
+              <>
+                <h2 className="font-bold text-lg lg:text-2xl">
+                  {user.helo_id}
+                </h2>
+                
+              </>
+            ) : (
+              <button
+                className="text-sm px-3 py-1 border bg-orange-500 rounded-lg"
+                onClick={handleAddHeloId}
+              >
+                Add Helo ID
+              </button>
+            )}
           </div>
 
           {/* Bio Section */}
@@ -76,7 +155,7 @@ function ProfileInfo({ user, posts }) {
           </div>
         </div>
 
-        {/* Right Section: Stats (Followers, Following, Posts) */}
+        {/* Stats Section */}
         <div className="flex flex-col lg:flex-row space-x-0 lg:space-x-6 mt-4 lg:mt-0 text-center lg:text-left">
           <p className="mb-2 lg:mb-0">
             <span className="font-bold">{posts.length || 11}</span> posts
@@ -93,14 +172,12 @@ function ProfileInfo({ user, posts }) {
   );
 }
 
-
-
 // Profile Image component
 function ProfileImage({ user, size = "w-50 h-50" }) {
   return (
     <div className={`flex items-center justify-start mb-4 ${size}`}>
       <img
-        src={user.profilePicture || "https://via.placeholder.com/150"}
+        src={user.profilePicture || defaultImage}
         alt="Profile"
         className={`rounded-full object-cover border border-gray-300 ${size}`}
       />
@@ -168,12 +245,11 @@ function UserProfile() {
 
       {/* Responsive Main Content */}
       <div className={`flex-1 bg-white ${isMobileScreen ? "px-0" : "px-4"}`}>
-        {" "}
-        {/* No padding on mobile */}
         {isLargeScreen && <LargeScreenProfile user={user} posts={posts} />}
         {isTabletScreen && <TabletScreenProfile user={user} posts={posts} />}
         {isMobileScreen && <MobileScreenProfile user={user} posts={posts} />}
       </div>
+      <ToasterHot />
     </div>
   );
 }

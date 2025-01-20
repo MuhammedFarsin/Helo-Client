@@ -10,12 +10,12 @@ export default {
         sans: ['Roboto', 'sans-serif'],
       },
       animation: {
-        shimmer: 'shimmer 1.5s infinite',
+        blink: 'blink 1.5s infinite',
       },
       keyframes: {
-        shimmer: {
-          '0%': { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(100%)' },
+        blink: {
+          '0%, 100%': { opacity: 0 },
+          '50%': { opacity: 1 },
         },
       },
       screens: {

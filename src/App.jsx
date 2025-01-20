@@ -1,8 +1,8 @@
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import LoadingPage from "./Pages/Common/LoadingPage";
-import UserRoute from "./Routes/userRoute";
+const UserRoute = React.lazy(() => import("./Routes/UserRoutes"));
 
 
 function App() {

@@ -82,19 +82,23 @@ function Navbar() {
 }
 
 function SidebarItem({ icon: Icon, label, path, type, onClick }) {
+  const navigate = useNavigate(); // Add useNavigate hook
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick(); // If onClick is passed, execute it (e.g., logout)
+    }
+    if (path) {
+      navigate(path); // Navigate to the path programmatically
+    }
+  };
+
   return (
-    <li className="flex items-center space-x-4 cursor-pointer text-[15px] text-gray-800 px-5 py-2 hover:bg-gray-100 rounded-md" onClick={onClick}>
-      {path ? (
-        <Link to={path} className="flex items-center">
-          <Icon className="text-1xl" />
-          {type === "full" && <span className="ml-2">{label}</span>}
-        </Link>
-      ) : (
-        <div className="flex items-center">
-          <Icon className="text-1xl" />
-          {type === "full" && <span className="ml-2">{label}</span>}
-        </div>
-      )}
+    <li className="flex items-center space-x-4 cursor-pointer text-[15px] text-gray-800 px-5 py-2 hover:bg-gray-100 rounded-md" onClick={handleClick}>
+      <div className="flex items-center">
+        <Icon className="text-1xl" />
+        {type === "full" && <span className="ml-2">{label}</span>}
+      </div>
     </li>
   );
 }
