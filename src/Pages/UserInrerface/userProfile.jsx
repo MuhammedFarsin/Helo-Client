@@ -2,7 +2,7 @@ import Navbar from "./Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { PlusCircleIcon } from "@heroicons/react/solid";
 import { useMediaQuery } from "react-responsive";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import axiosInstance from "../../Axios/axios"; // Make sure to import your axios instance
 import ToasterHot from "../Common/ToasterHot";
 import { toast } from "sonner";
@@ -50,42 +50,48 @@ function MobileScreenProfile({ user, posts }) {
 
 // Profile Information component
 function ProfileInfo({ user, posts }) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleAddHeloId = async () => {
     const { value: heloId } = await Swal.fire({
       text: "Enter your Helo ID",
-      input: 'text',  // Specify the input type directly
+      input: "text", 
       showCancelButton: true,
-      confirmButtonText: 'Submit',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: "Submit",
+      cancelButtonText: "Cancel",
     });
-  
+
     if (heloId) {
       try {
         const response = await axiosInstance.patch("/update-user-helo_id", {
           heloId,
-          userId: user.id
+          userId: user.id,
         });
-  
+
         console.log(response.data);
         dispatch(setUser({ ...user, helo_id: heloId }));
-  
-        Swal.fire('Success', 'Your ID has been updated!', 'success');
+
+        Swal.fire("Success", "Your ID has been updated!", "success");
       } catch (error) {
-        Swal.fire('Error', 'There was an error updating your ID', error.message);
+        Swal.fire(
+          "Error",
+          "There was an error updating your ID",
+          error.message
+        );
       }
     }
   };
 
   const handleProfilePictureChange = async (event) => {
     const file = event.target.files[0];
+
     if (file) {
       const formData = new FormData();
       formData.append("profilePicture", file);
-  
+      formData.append("userId", user.id);
+
       try {
         const response = await axiosInstance.patch(
-          "/user/updateProfilePicture",
+          "/update-profile-picture",
           formData,
           {
             headers: {
@@ -93,13 +99,14 @@ function ProfileInfo({ user, posts }) {
             },
           }
         );
-        
-        // Assuming the response contains the updated user data with the profile picture URL
+
         const updatedUser = response.data;
-  
-        // Updating user state with the new profile picture
-        dispatch(setUser({ ...user, profilePicture: updatedUser.profilePicture }));
-  
+        console.log(updatedUser);
+
+        dispatch(
+          setUser({ ...user, profilePicture: updatedUser.profilePicture })
+        );
+
         console.log(response.data);
         toast.success("Profile picture updated successfully!");
       } catch (error) {
@@ -113,15 +120,19 @@ function ProfileInfo({ user, posts }) {
       {/* Profile Image */}
       <div className="flex-shrink-0 mb-4 lg:mb-0 lg:mr-8 relative">
         <ProfileImage user={user} size="w-24 h-24 lg:w-32 lg:h-32" />
-        <label className="absolute bottom-0 right-0 cursor-pointer bg-gray-200 p-1 rounded-full">
-          <input
-            type="file"
-            className="hidden"
-            accept="image/*"
-            onChange={handleProfilePictureChange}
-          />
-          <PlusCircleIcon className="w-6 h-6 text-gray-600" />
-        </label>
+
+        {/* Conditionally render the profile picture update button */}
+        {(user.profilePicture === defaultImage || !user.profilePicture) && (
+          <label className="absolute bottom-0 right-0 cursor-pointer bg-gray-200 p-1 rounded-full">
+            <input
+              type="file"
+              className="hidden"
+              accept="image/*"
+              onChange={handleProfilePictureChange}
+            />
+            <PlusCircleIcon className="w-6 h-6 text-gray-600" />
+          </label>
+        )}
       </div>
 
       {/* Profile Info */}
@@ -134,7 +145,6 @@ function ProfileInfo({ user, posts }) {
                 <h2 className="font-bold text-lg lg:text-2xl">
                   {user.helo_id}
                 </h2>
-                
               </>
             ) : (
               <button
@@ -174,6 +184,7 @@ function ProfileInfo({ user, posts }) {
 
 // Profile Image component
 function ProfileImage({ user, size = "w-50 h-50" }) {
+  console.log(user);
   return (
     <div className={`flex items-center justify-start mb-4 ${size}`}>
       <img

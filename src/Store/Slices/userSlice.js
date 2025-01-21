@@ -7,13 +7,13 @@ const initialState = {
     username: "",
     email: "",
     phone: "",
+    profilePicture: "",
     password: "",
     googleId: "",
     displayName: "",
     isAdmin: false,
     isBlocked: false,
     bio: "",
-    profilePicture: ""
 };
 console.log('this is initialState',initialState)
 

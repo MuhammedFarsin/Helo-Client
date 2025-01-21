@@ -38,7 +38,6 @@ function SigninPage() {
         username,
         password,
       });
-      console.log(response.data.user)
 
       if (response.status === 200 && response.data.token) {
         window.localStorage.setItem("accessToken", response.data.token);

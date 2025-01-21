@@ -1,6 +1,6 @@
 import { FaHome, FaSearch, FaCompass, FaEnvelope, FaHeart, FaPlusSquare, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../Store/Slices/authSlice";
 import { removeUser } from "../../Store/Slices/userSlice";
 import { useMediaQuery } from "react-responsive";
@@ -10,6 +10,7 @@ import { persistor } from "../../Store/Store";
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector(state => state.user); // Assuming user info is stored in Redux
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
@@ -28,32 +29,60 @@ function Navbar() {
 
   return (
     <>
-      {(isTablet || isLargeScreen) && (
-        <div className={`bg-white border-r ${isTablet ? "w-20" : "w-60"}`}>
-          <div className={`fixed top-0 left-0 h-screen w-${isTablet ? '20' : '60'} bg-white shadow-lg flex flex-col justify-between`}>
-            {/* Top Section: Menu Items */}
-            <ul className="flex flex-col space-y-4 p-4 overflow-y-auto">
-              <SidebarItem icon={FaHome} label="Home" path="/home" type={isLargeScreen ? "full" : "icons"} />
-              <SidebarItem icon={FaSearch} label="Search" path="/search" type={isLargeScreen ? "full" : "icons"} />
-              <SidebarItem icon={FaCompass} label="Explore" path="/explore" type={isLargeScreen ? "full" : "icons"} />
-              <SidebarItem icon={FaEnvelope} label="Messages" path="/messages" type={isLargeScreen ? "full" : "icons"} />
-              <SidebarItem icon={FaHeart} label="Notifications" path="/notifications" type={isLargeScreen ? "full" : "icons"} />
-              <SidebarItem icon={FaPlusSquare} label="Create" path="/create" type={isLargeScreen ? "full" : "icons"} />
-              <SidebarItem icon={FaUser} label="Profile" path="/user-profile" type={isLargeScreen ? "full" : "icons"} />
-            </ul>
+      {/* Large Screen Layout */}
+      {isLargeScreen && (
+        <div className="fixed top-0 left-0 h-screen w-60 bg-white shadow-lg flex flex-col justify-between">
+          {/* Top Section: Menu Items */}
+          <ul className="flex flex-col space-y-4 p-4 overflow-y-auto">
+            <SidebarItem icon={FaHome} label="Home" path="/home" type="full" />
+            <SidebarItem icon={FaSearch} label="Search" path="/search" type="full" />
+            <SidebarItem icon={FaCompass} label="Explore" path="/explore" type="full" />
+            <SidebarItem icon={FaEnvelope} label="Messages" path="/messages" type="full" />
+            <SidebarItem icon={FaHeart} label="Notifications" path="/notifications" type="full" />
+            <SidebarItem icon={FaPlusSquare} label="Create" path="/create" type="full" />
+            <SidebarItem icon={FaUser} label="Profile" path="/user-profile" type="full" profilePicture={user.profilePicture} />
+          </ul>
 
-            {/* Bottom Section: Logout */}
-            <ul className="p-4">
-              <SidebarItem icon={FaSignOutAlt} label="Logout" onClick={handleLogout} type={isLargeScreen ? "full" : "icons"} />
-            </ul>
-          </div>
+          {/* Bottom Section: Logout */}
+          <ul className="p-4">
+            <SidebarItem icon={FaSignOutAlt} label="Logout" onClick={handleLogout} type="full" />
+          </ul>
         </div>
       )}
 
-      {/* Mobile Navigation */}
+      {/* Tablet Layout */}
+      {isTablet && (
+        <div className="fixed top-0 left-0 h-screen w-20 bg-white shadow-lg flex flex-col justify-between">
+          {/* Top Section: Menu Items */}
+          <ul className="flex flex-col space-y-4 p-4 overflow-y-auto">
+            <SidebarItem icon={FaHome} label="Home" path="/home" type="icons" />
+            <SidebarItem icon={FaSearch} label="Search" path="/search" type="icons" />
+            <SidebarItem icon={FaCompass} label="Explore" path="/explore" type="icons" />
+            <SidebarItem icon={FaEnvelope} label="Messages" path="/messages" type="icons" />
+            <SidebarItem icon={FaHeart} label="Notifications" path="/notifications" type="icons" />
+            <SidebarItem icon={FaPlusSquare} label="Create" path="/create" type="icons" />
+            {/* Modified SidebarItem for Tablet */}
+            <SidebarItem 
+              icon={FaUser} 
+              label="Profile" 
+              path="/user-profile" 
+              type="icons" 
+              profilePicture={user.profilePicture} 
+              isTablet={true} // Pass isTablet prop to SidebarItem
+            />
+          </ul>
+
+          {/* Bottom Section: Logout */}
+          <ul className="p-4">
+            <SidebarItem icon={FaSignOutAlt} label="Logout" onClick={handleLogout} type="icons" />
+          </ul>
+        </div>
+      )}
+
+      {/* Mobile Layout */}
       {isMobile && (
         <>
-          {/* Bottom navigation */}
+          {/* Bottom Navigation */}
           <div className="fixed bottom-0 left-0 w-full bg-white border-t flex justify-around">
             <Link to="/home">
               <FaHome className="text-2xl text-gray-800" />
@@ -81,22 +110,37 @@ function Navbar() {
   );
 }
 
-function SidebarItem({ icon: Icon, label, path, type, onClick }) {
-  const navigate = useNavigate(); // Add useNavigate hook
+function SidebarItem({ icon: Icon, label, path, type, onClick, profilePicture, isTablet }) {
+  const navigate = useNavigate();
 
   const handleClick = () => {
     if (onClick) {
-      onClick(); // If onClick is passed, execute it (e.g., logout)
+      onClick();
     }
     if (path) {
-      navigate(path); // Navigate to the path programmatically
+      navigate(path);
     }
   };
 
   return (
-    <li className="flex items-center space-x-4 cursor-pointer text-[15px] text-gray-800 px-5 py-2 hover:bg-gray-100 rounded-md" onClick={handleClick}>
+    <li
+      className="flex items-center space-x-4 cursor-pointer text-[15px] text-gray-800 px-5 py-2 hover:bg-gray-100 rounded-md"
+      onClick={handleClick}
+    >
       <div className="flex items-center">
-        <Icon className="text-1xl" />
+        {profilePicture ? (
+          <>
+            {isTablet && ( // Check if isTablet is true
+              <img
+                src={profilePicture}
+                alt="Profile"
+                className="w-8 h-8 rounded-full object-cover"
+              />
+            )}
+          </>
+        ) : (
+          <Icon className="text-2xl" />
+        )}
         {type === "full" && <span className="ml-2">{label}</span>}
       </div>
     </li>
