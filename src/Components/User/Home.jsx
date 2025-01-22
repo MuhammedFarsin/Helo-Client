@@ -1,5 +1,5 @@
 import React from "react"
-import Home_page from "../../Pages/UserInrerface/home"
+import Home_page from "../../Pages/UserInrerface/Homepage"
 
 function Home() {
   return (
