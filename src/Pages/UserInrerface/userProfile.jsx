@@ -10,26 +10,123 @@ import defaultImage from "../../assets/imageProject/camera.jpg";
 import { setUser } from "../../Store/Slices/userSlice";
 
 // Component for large screens
+
 function LargeScreenProfile({ user, posts }) {
   return (
-    <div className="flex flex-col items-center">
-      <div className="w-full max-w-4xl bg-white rounded-md shadow-md mt-10 p-6">
-        <ProfileInfo user={user} posts={posts} />
-        <PostsSection posts={posts} />
+    <div className="flex flex-col items-center w-full px-12 mt-8">
+      {/* Profile Section */}
+      {/* <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-8 flex flex-col md:flex-row items-center justify-between"> */}
+        <div className="flex items-center space-x-24 mr-32">
+          {/* Profile Picture */}
+          <img
+            src={user.profilePicture}
+            alt={`${user.username}'s profile`}
+            className="w-36 h-36 object-cover rounded-full"
+          />
+          <div className="ml-6">
+            {/* User Info */}
+            <div className="flex space-x-6">
+              <span className="font-bold text-3xl">{user.helo_id}</span>
+              <div className="flex space-x-4 mt-2">
+                <button className="px-6 py-2 bg-gray-300 text-black rounded-md font-semibold hover:bg-gray-400 transition duration-300">
+                  Edit
+                </button>
+                <button className="px-6 py-2 bg-gray-300 text-black rounded-md font-semibold hover:bg-gray-400 transition duration-300">
+                  Share
+                </button>
+              </div>
+            </div>
+
+            <div className="flex space-x-12 mt-4">
+              <div className="flex flex-col items-center">
+                <span className="font-bold text-xl">{posts.length || 0}</span>
+                <span className="text-sm text-gray-500">Posts</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="font-bold text-xl">{user.followersCount || 0}</span>
+                <span className="text-sm text-gray-500">Followers</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="font-bold text-xl">{user.followingCount || 0}</span>
+                <span className="text-sm text-gray-500">Following</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Optional Bio or Description */}
+        <div className="w-full mt-4">
+          {user.bio && <p className="text-lg text-gray-600">{user.bio}</p>}
+        </div>
+      {/* </div> */}
+
+      {/* Posts Section */}
+      <PostsSection posts={posts} />
+
+      {/* Logout Button */}
+      <div className="mt-8">
+        <LogoutButton />
       </div>
-      <LogoutButton />
     </div>
   );
 }
 
+
 // Component for medium (tablet) screens
 function TabletScreenProfile({ user, posts }) {
   return (
-    <div className="flex-1 flex-col items-center">
-      <div className="w-full max-w-5xl bg-white rounded-md shadow-md mt-8 p-6">
-        <ProfileInfo user={user} posts={posts} />
-        <PostsSection posts={posts} />
+    <div className="flex flex-col items-center w-full px-8 mt-8">
+      {/* Profile Section */}
+      {/* <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6 flex flex-col items-center"> */}
+      {/* Profile Header */}
+      <div className="flex w-full items-center justify-between">
+        <div className="flex items-center">
+          {/* Profile Picture */}
+          <img
+            src={user.profilePicture}
+            alt={`${user.username}'s profile`}
+            className="w-36 h-36 object-cover rounded-full"
+          />
+          <div className="ml-4">
+            {/* User Info */}
+            <div className="flex space-x-4 mt-2 ml-10">
+              <span className="font-bold text-2xl">{user.helo_id}</span>
+              <button className="px-8 bg-gray-300 text-black rounded-md font-semibold hover:bg-gray-400 transition duration-300">
+                Edit
+              </button>
+              <button className="px-8 bg-gray-300 text-black rounded-md font-semibold hover:bg-gray-400 transition duration-300">
+                Share
+              </button>
+            </div>
+
+            <div className="flex space-x-8 mt-2 ml-10">
+              <div className="flex flex-col items-center">
+                <span className="font-bold">{posts.length || 0}</span>
+                <span className="text-sm text-gray-500">Posts</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="font-bold">{user.followersCount || 0}</span>
+                <span className="text-sm text-gray-500">Followers</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="font-bold">{user.followingCount || 0}</span>
+                <span className="text-sm text-gray-500">Following</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Edit and Share Buttons */}
+        <div className="flex space-x-4"></div>
       </div>
+
+      {/* Optional Bio or Description */}
+      {user.bio && <p className="mt-4 text-sm text-gray-600">{user.bio}</p>}
+      {/* </div> */}
+
+      <PostsSection posts={posts} />
+
+      {/* Logout Button */}
       <LogoutButton />
     </div>
   );
@@ -39,22 +136,62 @@ function TabletScreenProfile({ user, posts }) {
 function MobileScreenProfile({ user, posts }) {
   return (
     <div className="flex flex-col items-center w-full px-4 mt-4">
-      <div className="w-full max-w-md bg-white rounded-md shadow-md p-4">
-        <ProfileInfo user={user} posts={posts} />
-        <PostsSection posts={posts} />
+      {/* <div className="w-full max-w-md bg-white rounded-md shadow-md p-5"> */}
+      <span className="font-bold text-lg mr-80">{user.helo_id}</span>
+
+      <div className="flex items-center">
+        {/* Profile Picture */}
+        <img
+          src={user.profilePicture}
+          alt={`${user.username}'s profile`}
+          className="w-20 h-20 object-cover rounded-full mt-3 mr-20"
+        />
+        {/* User Info */}
+        <div className="flex flex-col items-start">
+          {/* User Helo ID */}
+          <span className="font-bold text-lg">{user.username}</span>
+          {/* Stats Section */}
+          <div className="flex space-x-8 mt-2">
+            <div className="flex flex-col items-center">
+              <span className="font-bold">{posts.length || 0}</span>
+              <span className="text-sm text-gray-500">Posts</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="font-bold">{user.followersCount || 0}</span>
+              <span className="text-sm text-gray-500">Followers</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="font-bold">{user.followingCount || 0}</span>
+              <span className="text-sm text-gray-500">Following</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Optional Bio or Description */}
+        {user.bio && <p className="mt-4 text-sm text-gray-600">{user.bio}</p>}
       </div>
+      <div className="flex space-x-4 mt-2 ml-32">
+        <button className="px-12 py-2 bg-gray-300 text-black rounded-full font-semibold hover:bg-gray-400 transition duration-300">
+          Edit
+        </button>
+        <button className="px-12 py-2 bg-gray-300 text-black rounded-full font-semibold hover:bg-gray-400 transition duration-300">
+          Share
+        </button>
+      </div>
+      {/* Posts Section */}
+      <PostsSection posts={posts} />
       <LogoutButton />
     </div>
+    // </div>
   );
 }
-
 // Profile Information component
 function ProfileInfo({ user, posts }) {
   const dispatch = useDispatch();
   const handleAddHeloId = async () => {
     const { value: heloId } = await Swal.fire({
       text: "Enter your Helo ID",
-      input: "text", 
+      input: "text",
       showCancelButton: true,
       confirmButtonText: "Submit",
       cancelButtonText: "Cancel",
