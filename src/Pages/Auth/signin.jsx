@@ -48,7 +48,9 @@ function SigninPage() {
           dispatch(login());
           dispatch(setUser(response.data.user));
         }, 500);
-        console.log(setUser(response.data.user))
+        console.log(setUser(response.data.user));
+      } else if (response.status === 403) {
+        toast.error(response.data.message);
       } else if (response.status === 401) {
         toast.error(response.data.message);
       }
@@ -72,7 +74,7 @@ function SigninPage() {
         localStorage.setItem("accessToken", response.data.token);
         dispatch(login());
         dispatch(setUser(response.data.user));
-        console.log(response.data.user)
+        console.log(response.data.user);
         toast.success("Login successful!");
       } else {
         toast.error("No authorization code received");
