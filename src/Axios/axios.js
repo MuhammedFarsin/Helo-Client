@@ -1,5 +1,4 @@
 import axios from "axios"; 
-// import { baseURL } from "../Config/config";
 //AXIOS INSTANCE
 const axiosInstance = axios.create({
   baseURL: "http://localhost:4000",
@@ -8,21 +7,44 @@ const axiosInstance = axios.create({
   },
 });
 
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("accessToken");
-    console.log('this is the token i need',token)
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    } else {
-      console.log("No token found in localStorage");
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const refreshToken = localStorage.getItem("refreshToken");
+
+      if (refreshToken) {
+        try {
+          const { data } = await axiosInstance.post("/refresh-token", { refreshToken });
+
+          localStorage.setItem("accessToken", data.accessToken);
+
+          originalRequest.headers["Authorization"] = `Bearer ${data.accessToken}`;
+          return axiosInstance(originalRequest);
+        } catch (refreshError) {
+          console.error("Error refreshing token:", refreshError);
+
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          window.location.href = "/login";  
+
+          return Promise.reject(refreshError);
+        }
+      } else {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "/login"; 
+      }
     }
-    return config;
-  },
-  (error) => {
+
     return Promise.reject(error);
   }
 );
+
 
 export default axiosInstance;
 

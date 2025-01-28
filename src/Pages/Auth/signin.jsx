@@ -39,8 +39,12 @@ function SigninPage() {
         password,
       });
 
-      if (response.status === 200 && response.data.token) {
-        window.localStorage.setItem("accessToken", response.data.token);
+      if (response.status === 200) {
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+        localStorage.setItem("userId", response.data.user._id); // Store userId
+
+        console.log(response)
         if (response.data.message) {
           toast.success(response.data.message);
         }
@@ -48,6 +52,7 @@ function SigninPage() {
           dispatch(login());
           dispatch(setUser(response.data.user));
         }, 500);
+        console.log(response.data);
         console.log(setUser(response.data.user));
       } else if (response.status === 403) {
         toast.error(response.data.message);
@@ -71,7 +76,8 @@ function SigninPage() {
       if (authResult["code"]) {
         const response = await googleAuth(authResult["code"]);
 
-        localStorage.setItem("accessToken", response.data.token);
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
         dispatch(login());
         dispatch(setUser(response.data.user));
         console.log(response.data.user);

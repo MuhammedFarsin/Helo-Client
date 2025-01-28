@@ -21,8 +21,14 @@ function Homepage() {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
+        const accessToken = localStorage.getItem("accessToken");
         if (user && user._id) {
-          const response = await axiosInstance.get(`/user-details/${user._id}`);
+          const response = await axiosInstance.get(`/user-details/${user._id}`,{
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            }
+          });
+          
           if (response.status === 200 && response.data.usersInfo) {
             dispatch(setUser(response.data.usersInfo));
 
@@ -52,7 +58,7 @@ function Homepage() {
             heloId,
             userId: user._id,
           });
-          console.log(response.data);
+          console.log(response);
           dispatch(setUser({ ...user, helo_id: heloId }));
           Swal.fire("Success", "Your ID has been updated!", "success");
         } catch (error) {
